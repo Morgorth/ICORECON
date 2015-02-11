@@ -1,0 +1,33 @@
+ 
+ {% macro recursive_tree_account(tree_element,depth) %}
+ 
+
+    <li class="account_line ui-state-default rank{{depth}}" {% if tree_element.code == 000000 %} id="starting_elem" {% endif %}>
+        <div class="account_container">
+            <i class="fa fa-ellipsis-v"></i>
+            <i class="fa fa-ellipsis-h"></i>
+            {# essential elements DO NOT CHANGE the order #}
+            <p class="element_technical element_id">{{ tree_element.id }}</p>
+            <p class="element_technical element_parent"></p>
+            <p class="element_technical element_action">{{tree_element.action}}</p>
+            
+            {# the properties defined in the model class #}
+            
+            
+            <p class="element_property element_code">{{ tree_element.code }}</p>
+            <p class="element_property element_name">{{ tree_element.name }}</p>  
+                  
+            
+            <p class="element_technical account_line_actions"><i class="fa fa-times-circle Action_Button" title="Delete"></i></p>
+        </div>
+        {% if tree_element.__children|length %}
+            <ul class="children_list">
+                {% for child in tree_element.__children %}
+                    {{ _self.recursive_tree_account(child, depth + 1) }}
+                {% endfor %}
+            </ul>
+        {% endif %}                    
+    </li> 
+    
+
+{% endmacro %}

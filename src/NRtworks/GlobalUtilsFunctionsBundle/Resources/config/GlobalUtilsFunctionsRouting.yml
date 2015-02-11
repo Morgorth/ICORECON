@@ -1,0 +1,34 @@
+              
+              ## GlobalUtilsFunctions routing file
+        
+   ## route to the controller that gets the constraints for a given dimension  
+_NRtworks_globalUtilsFunctions_validatorGetConstraints:
+  pattern:  /globalUtilsFunctions_validatorGetConstraints
+  defaults: { _controller: NRtworksGlobalUtilsFunctionsBundle:GlobalUtilsFunctions:validatorGetConstraints} 
+  requirements:
+    _method: POST  
+  options:
+    expose: true  
+  
+  
+  
+    ## route to the controller used if an input chekcs in the DB
+_NRtworks_globalUtilsFunctions_checkInDB:
+  pattern:  /globalUtilsFunctionsCheckInDB
+  defaults: { _controller: NRtworksGlobalUtilsFunctionsBundle:GlobalUtilsFunctions:checkInDB} 
+  options:
+    expose: true 
+  requirements:
+    _method: POST    
+
+        
+        
+   ## RESTful API routes     
+_leaveit:
+  pattern: /_API_getTree
+  defaults:  {_controller: NRtworksChartOfAccountsBundle:ChartOfAccounts:_API_getTree}
+  requirements:
+    _method: POST
+  options:
+    expose: true
+    

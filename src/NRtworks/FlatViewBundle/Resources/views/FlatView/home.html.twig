@@ -1,0 +1,25 @@
+
+ {% extends '::base.html.twig' %}
+
+ {% block javascripts %}
+    {{ parent() }}
+
+      
+   
+    
+ {% endblock %}
+
+
+ {% block body %}
+
+
+
+<h1>Flat view of {{ dimension }}</h1>
+
+
+<div ui-view></div>
+
+
+
+<br/>
+ {% endblock %}

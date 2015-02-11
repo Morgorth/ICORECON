@@ -1,0 +1,42 @@
+
+<div class="angular-delimiter"> 
+
+    <div class="main_container">
+
+       
+        {%verbatim %}
+            <br/> <button class="btn btn-default" ng-click="reload()">Reload</button> 
+            <button class="btn btn-success" ng-click="saveChanges()">Save the changes</button> 
+            <br/>
+            <br/>
+            
+            <script type="text/ng-template" id="nodes_renderer.html">
+                
+                <div ui-tree-handle class="tree-node tree-node-content" ng-dblclick="node.id+1">
+                    <a class="" data-nodrag ng-click="toggle(this)"><i class="NRtworks_treeView_leftFolderMarkerContainer" ng-class="{'fa fa-folder-o': collapsed && node.nodes.length>0, 'fa fa-folder-open-o': !collapsed && node.nodes.length>0,'fa fa-angle-right': !node.nodes.length>0}"></i></a>
+                    <span ng-Class="{'NRtworks_treeEditing_elementToBeDeleted':node.to_delete.length>0,'NRtworks_treeEditing_newElement':user.id=='new'}">
+                    [{{node.code}}: {{node.id}}] {{node.name}}  {{ node.country }}
+                    </span>
+                    <a class="pull-right btn btn-xs" data-nodrag ng-click="removeElement(this,node)" ng-Class="{'btn-danger':node.to_delete!='yes','btn-success':node.to_delete=='yes'}"><span class="glyphicon glyphicon-remove" ng-if="node.to_delete !='yes'"></span><span class="glyphicon glyphicon-ok" ng-if="node.to_delete =='yes'"></span></a>
+                    <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+                    <a class="pull-right btn btn-primary btn-xs" data-nodrag  style="margin-right: 8px;" ui-sref="fullEdit({elementId:{{node.id}}})"><span class="glyphicon glyphicon-pencil"></span></a>                    
+                </div>
+                
+                <ol  ui-tree-nodes="" ng-model="node.nodes"  data-horizontal="" ng-class="{hidden: collapsed}">
+                
+                    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'">
+                    </li>
+                </ol>
+              
+            </script>
+            <div ui-tree id="tree-root" data-drag-enabled="tree.enabled" data-empty-place-holder-enabled="tree.enabled">
+              <ol ui-tree-nodes="" ng-model="data">
+                <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+              </ol>
+            </div>
+            
+        
+
+        {% endverbatim %}
+    </div>
+</div>        

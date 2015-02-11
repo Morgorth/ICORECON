@@ -1,0 +1,86 @@
+
+# ---------------- ROUTING FOR INITIAL SUBSCRIPTION
+_start:
+    pattern: /subscription
+    defaults: {_controller: NRtworksSubscriptionBundle:Subscription:index }
+    
+_add_new_customer:    
+    pattern: /subscription/addnew
+    defaults: {_controller: NRtworksSubscriptionBundle:Subscription:SubscriptionHandling }
+    
+_add_customer_admin:
+  pattern: /subscription/finalstep
+  defaults: {_controller: NRtworksSubscriptionBundle:Subscription:AddCustomerAdmin }
+  
+_set_customer_admin:
+   pattern: /subscription/set_customer_admin
+   defaults: {_controller: NRtworksSubscriptionBundle:Registration:RegisterAdminUser }
+   
+   
+# ----- ROUTING FOR USER MANAGER   
+   
+
+# home page   
+_UserManager:
+  pattern: /usermanager
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:Home }
+  options:
+    expose: true
+# user list route for angular
+_UserManager_getUser_List:
+  pattern: /usermanagerlist
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:list }
+  options:
+    expose: true    
+# add a new user route for angular    
+_UserManager_addNewUser:
+  pattern: /usermanager/addnew
+  defaults : {_controller: NRtworksSubscriptionBundle:UserManager:addNewUser }
+  options:
+     expose: true   
+# route for the SF for     
+_UserManager_form_addNewUser:
+  pattern: /usermanager/form_addNewUser
+  defaults : {_controller: NRtworksSubscriptionBundle:UserManager:renderFormAddNewUser }
+  options:
+     expose: true   
+#route for handling the new user form       
+_UserManager_formHandling_addNewUser:
+  pattern: /usermanager/formHandling_addNewUser
+  defaults : {_controller: NRtworksSubscriptionBundle:UserManager:setNewUser }
+  options:  
+
+# - API routes to get data for User Manager       
+_UserManager_API_getUserList:
+  pattern: /usermanager/getuserlist
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:getUserList }
+  options:
+    expose: true
+  requirements:
+    _format: json
+    _method: GET    
+ 
+_UserManager_API_getUserTypeList:
+  pattern: /usermanager/getUserTypeList
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:getUserTypeList }
+  options:
+    expose: true
+  requirements:
+    _format: json
+    _method: GET   
+
+_UserManager_API_checkIfUsernameExists:
+  pattern: /usermanager/checkIfUsernameExists
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:checkIfUsernameExists }
+  options:
+    expose: true
+  requirements:
+    _method: POST    
+    
+_UserManager_API_saveChanges:
+  pattern: /usermanager/saveChanges
+  defaults: {_controller: NRtworksSubscriptionBundle:UserManager:updateUserList}
+  options:
+    expose: true
+  requirements:
+    _method: POST    

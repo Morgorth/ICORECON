@@ -1,0 +1,38 @@
+
+/* ################################# Structural Data edition (angular) CSS file ################################## */
+
+/* ****************************  Main page styling *************************** */
+
+.toolbox
+{
+    margin-top:15px;
+    margin-left:15px;
+}
+
+.main_container
+{
+    margin-top:15px;
+    margin-left:15px;
+    border:solid 1px;
+}
+
+
+/* ****************************  Styling element properties *************************** /
+
+/* class used to style all the properties of an element */
+.element_property
+{
+        display:inline;
+}
+
+.to_be_deleted
+{
+    text-decoration: line-through;
+    color:black;
+}
+
+.new_element
+{    
+    background-color: #ccf994;
+}
+

@@ -1,0 +1,62 @@
+
+    #treeViewBundle
+NRtworks_TreeView:
+    resource: "@NRtworksTreeViewBundle/Resources/config/routing.yml"
+    prefix: /
+    
+    #flatViewBundle
+NRtworks_FlatView:
+    resource: "@NRtworksFlatViewBundle/Resources/config/routing.yml"
+    prefix: /
+        
+    
+    #subscription management
+NRtworks_subscription:
+    resource: "@NRtworksSubscriptionBundle/Resources/config/routing.yml"
+    prefix: /
+    
+NRtworks_MainUserInterface:
+  resource: "@NRtworksMainUserInterfaceBundle/Resources/config/routing.yml"
+  prefix: /
+            
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+           
+    
+    #GlobalUtilsFunctions    
+NRtworks_GlobalUtilsFunctions:
+     resource: "@NRtworksGlobalUtilsFunctionsBundle/Resources/config/GlobalUtilsFunctionsRouting.yml"
+     prefix: /interal/globalUtilsFunctions/
+            
+            
+#FOS routing
+_fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /security
+
+_fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+_fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+_fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile
+    
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register    
+    
+    
+admin:
+  resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+  prefix: /admin
+  
+_sonata_admin:
+  resource: .
+  type: sonata_admin
+  prefix: /admin
+  

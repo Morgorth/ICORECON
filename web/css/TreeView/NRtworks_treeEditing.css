@@ -1,0 +1,19 @@
+.NRtworks_treeView_leftFolderMarkerContainer{
+    min-width:15px;
+    
+}
+
+.NRtworks_treeEditing_element_container
+{    
+    /*border: 1px dashed grey;*/
+}
+
+.NRtworks_treeEditing_elementToBeDeleted
+{
+    text-decoration: line-through;    
+}
+
+.NRtworks_treeEditing_newElement
+{
+    background-color: #ccf994; 
+}

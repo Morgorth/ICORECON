@@ -1,0 +1,7 @@
+## YAML Template.
+---
+
+NRtworks_MainUserInterface:
+    pattern:  /
+    defaults: { _controller: NRtworksMainUserInterfaceBundle:MainUserInterface:Home }
+          

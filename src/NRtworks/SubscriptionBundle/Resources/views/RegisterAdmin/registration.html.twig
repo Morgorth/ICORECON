@@ -1,0 +1,11 @@
+ {% extends '::base.html.twig' %}
+
+{% block title %}Register your admin user{% endblock %}
+
+ {% block body %}
+
+<form action="{{ path('_set_customer_admin') }}" {{ form_enctype(RegisterAdminForm) }} method="POST" class="fos_user_registration_register">
+{{ form_widget(RegisterAdminForm) }}
+<input type="submit" value="{{ 'registration.submit'|trans }}" />
+</form>      
+ {% endblock %}

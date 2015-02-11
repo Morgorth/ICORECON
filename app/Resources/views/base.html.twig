@@ -1,0 +1,134 @@
+{# app/Resources/views/base.html.twig #}
+<!DOCTYPE html>
+{% if SectionIdentification == "UserManager" %}    
+<html ng-app="UserManager">
+{% elseif SectionIdentification == "TreeView" %}  
+<html ng-app="treeView">
+{% elseif SectionIdentification == "FlatView" %}  
+<html ng-app="FlatView">  
+{% else %}
+<html>        
+{% endif %}     
+    <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="expires" content="0"/>
+        <meta http-equiv="pragma" content="no-cache" />
+        <title>{% block title %}ICO Reconciliator{% endblock %}</title>   
+
+        {% block stylesheets %}
+        
+        <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
+        <link href="{{ asset('css/vendors/font-awesome.css') }}" rel="stylesheet">
+        
+        
+            {% if SectionIdentification == "UserManager" %}
+                <link href="{{ asset('css/data_edition_angular.css') }}" type="text/css" rel="stylesheet" />
+                <link href="{{ asset('css/vendors/bootstrap.min.css') }}" rel="stylesheet">
+                <link href="{{ asset('css/xeditable.css') }}" type="text/css" rel="stylesheet">
+            {% elseif SectionIdentification == "FlatView" %}
+                <link href="{{ asset('css/data_edition_angular.css') }}" type="text/css" rel="stylesheet" />
+                <link href="{{ asset('css/vendors/bootstrap.min.css') }}" rel="stylesheet">
+                <link href="{{ asset('css/xeditable.css') }}" type="text/css" rel="stylesheet">   
+                <link href="{{ asset('css/FlatView/NRtworks_FlatView.css') }}" type="text/css" rel="stylesheet" />
+            {% elseif SectionIdentification == "TreeView" %}
+                <link href="{{ asset('css/angular module css/angular-ui-tree.min.css') }}" type="text/css" rel="stylesheet" />
+                <link href="{{ asset('css/TreeView/NRtworks_treeEditing.css') }}" type="text/css" rel="stylesheet" />
+                <link href="{{ asset('css/vendors/bootstrap.min.css') }}" rel="stylesheet">
+                <link href="{{ asset('css/xeditable.css') }}" type="text/css" rel="stylesheet">
+                   
+            {% else %}
+               
+                <link href="{{ asset('css/chartofaccounts.ul.css') }}" type="text/css" rel="stylesheet" />
+                
+            {% endif %}
+            
+        {% endblock %}
+    </head>
+    
+    {% block javascripts %}
+
+
+    
+        {% if SectionIdentification == "UserManager" %}
+
+    
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    
+            <script type="text/javascript" src="{{ asset('js/angular v1.2.28.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/custom_js/utilsFunctions.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular_custom/GlobalUtilsFunctionsCheckInput.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular-route.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular-resource.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/xeditable.min.js') }}"></script>
+            
+        {% elseif SectionIdentification == "FlatView" %}
+            <script type="text/javascript">var dimension = "{{dimension}}"</script>
+
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    
+            <script type="text/javascript" src="{{ asset('js/angular v1.2.28.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular module/angular-ui-router.js') }}"></script> 
+            <script type="text/javascript" src="{{ asset('js/angular-resource.min.js') }}"></script>
+            
+            <script type="text/javascript" src="{{ asset('js/xeditable.min.js') }}"></script>
+            
+            <script type="text/javascript" src="{{ asset('js/custom_js/utilsFunctions.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular_custom/GlobalUtilsFunctionsCheckInput.js') }}"></script>
+
+            <script type="text/javascript" src="{{ asset('js/angular_custom/flatView.js') }}"></script>
+            
+        {% elseif SectionIdentification == "TreeView" %}
+            
+            <script type="text/javascript">var dimension = "{{dimension}}"</script>
+    
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    
+            <script type="text/javascript" src="{{ asset('js/angular v1.2.28.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/custom_js/utilsFunctions.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular_custom/GlobalUtilsFunctionsCheckInput.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular-route.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular-resource.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/xeditable.min.js') }}"></script>  
+            <script type="text/javascript" src="{{ asset('js/angular module/angular-ui-tree.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/angular module/angular-ui-router.js') }}"></script> 
+            <script type="text/javascript" src="{{ asset('js/angular_custom/treeView_angular.js') }}"></script>
+            
+        {% else %}
+    
+            <script src="{{ asset('js/jquery-2.0.2.js') }}"></script>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            
+        {% endif %}
+            
+    {% endblock %}
+    
+    <body>        
+        
+        <div id="sidebar">
+            {% block sidebar %}
+                ICO reconciliator
+            <ul>
+                <li><a href="{{ path('_start') }}">Subscription</a></li>
+                <li><a href="{{ path('_UserManager') }}">User Manager</a></li>
+                <br/>
+                <br/>Dimension Management
+                <li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'ChartOfAccounts'}) }}">Chart of Accounts</a></li>
+                <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'Account'}) }}">Accounts</a></li>
+                <br/>
+                <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'BusinessUnit'}) }}">Entity</a></li>
+                <br/>
+                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Cycle'}) }}">Cycle</a></li>
+                
+            </ul>
+            {% endblock %}
+        </div>
+
+        <div id="content">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>

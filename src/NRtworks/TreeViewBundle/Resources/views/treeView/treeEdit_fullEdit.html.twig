@@ -1,0 +1,36 @@
+
+
+
+<div class="angular-delimiter" ng-model="data">
+    
+    
+    <br/>
+    <h2>Edit an element of {{ parameters.dimension }}</h2>
+    <br/>
+    <br/>
+    <table class="table table-bordered table-hover table-condensed" name="NRtworks_editable_grid">
+    {%verbatim %}
+    <tr ng-repeat="properties in elementToEdit" ng-if="fieldsSettings[$index][1]==1">
+            <td>
+                    {{ fieldsSettings[$index][0] }}
+            </td>
+            <td data-select-when-editing>                                    
+                <span editable-text="properties.prop" ng-if="fieldsSettings[$index][2]== 'text'" onbeforesave="checkInput($data,properties.prop,dimension,fieldsSettings[$index][0])">
+                            {{ properties.prop || 'empty' }}               
+                </span>
+                <span editable-select="properties.prop" ng-if="fieldsSettings[$index][2]== 'select'" e-ng-options="s.value as s.text for s in fieldsSettings[$index][3]">
+                            {{ selectElement(properties.prop,$index) || 'empty' }}               
+                </span>
+            </td>                                
+    </tr>
+        <tr>
+            <td>
+               <a ui-sref="treeView"><button class="btn btn-success" ng-click="saveElement(elementToEdit)">Save</button></a>
+            </td>
+        </tr>
+    
+    </table>
+    {% endverbatim %}
+   
+
+</div>        

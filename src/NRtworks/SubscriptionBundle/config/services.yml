@@ -1,0 +1,7 @@
+services:
+    customerAdmin.form.add.new.user:
+        class: NRtworks\SubscriptionBundle\Form\customerAdminAddNewUser
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: acme_user_registration }
+

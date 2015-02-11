@@ -1,0 +1,104 @@
+ {# src/Acme/HelloBundle/Resources/views/Hello/index.html.twig #}
+ {% extends '::base.html.twig' %}
+
+ {% block body %}
+
+     <span id="formula">select a cell...</span> 
+
+     <div id="my_table">
+         
+            {%set rownumber = tablestructure.trnumber%}
+            {%set columnnumber = tablestructure.tdnumber%}      
+         <table id="planning" cellspacing="0">
+         <tr>
+             <th></th>
+             {% for letter in 'a'..columnnumber %}
+                 
+                 <th>{{letter}}</th>
+                 
+             {% endfor %}
+             
+         </tr>
+         
+          
+
+         {% for i in 1..rownumber %}
+            <tr class="row" id="row{{i}}">
+                <td class="lineheader">
+                        {{i}}
+                </td>
+                {% for y in 'a'..columnnumber%}
+                <td class="cell" id="{{y~i}}">                  
+                {{i}}
+                        <span class="cellformula"></span>
+                </td>
+                {% endfor %}   
+         {% endfor %}    
+                
+         </table>
+   
+         </div>
+
+         
+            <script>
+                $( document).ready(function() {
+                  console.log("ready!");
+                  
+                  // var that is use to pass $(this)
+                  var globalthis;
+                  
+                // cell changing by mouseover  
+                $('.cell').hover(function (){
+                    $(this).addClass("beinghovered");
+                  },
+                  function () {
+                    $(this).removeClass("beinghovered");
+                  }
+                );
+
+                // edit a cell
+                
+                $.cellhovered = function(globalthis)
+                {
+                  globalthis.addClass("beinghovered");
+                  globalthis.removeClass("beinghovered");
+                }
+                
+                $.editable = function(globalthis)
+                {
+                    globalthis.addClass("beinghovered");
+                    globalthis.attr('contentEditable',true);
+                    var valueonclick = globalthis.text();
+                    $('#formula').html(valueonclick);
+                    $('.cell').off('click');
+                    $('.cell').off('mouseenter mouseleave');
+                    
+                    // keyboard event
+                    globalthis.keypress(function(event){
+                        
+                        if(event.which == 13)
+                            {
+                               //if return is hit
+                               globalthis.attr('contentEditable',false); 
+                               globalthis.removeClass("beinghovered");
+                               $('.cell').on('click',function(){globalthis = $(this);$.editable(globalthis);});
+                               $('.cell').hover(function (){$(this).addClass("beinghovered");},function(){$(this).removeClass("beinghovered");});
+                            }
+                            $('#formula').html(globalthis.text());
+                    });     
+                } 
+
+
+                $('.cell').click(function(){
+                    globalthis = $(this);
+                    $.editable(globalthis);
+                })
+                
+                  
+                  
+                  
+                });
+
+            </script>
+       
+ {% endblock %}

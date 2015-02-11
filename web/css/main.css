@@ -1,0 +1,108 @@
+/* 
+    Document   : main
+    Created on : 24 févr. 2013, 16:06:25
+    Author     : Eagle1
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body{
+    
+  
+    background-color: #FFFFFF;
+}
+
+root { 
+    display: block;
+}
+
+#my_table{
+    padding:10px;
+    border:5px solid gray;    
+    min-width: 300px;
+    max-width: 600px;
+    min-height: 300px;
+    max-height:200px;
+    overflow: scroll;
+}
+
+/* ############################# General Design ####################### */
+
+
+#sidebar{
+    border:1px solid black;
+    width: 150px;
+    min-height: 800px;
+    display:inline-block;
+    vertical-align: top;
+    
+}
+
+#content{
+    border:1px solid black;
+    min-height: 800px;
+    min-width:600px;
+    vertical-align: top;
+    display:inline-block;
+}
+
+h1
+{
+    width:50%;
+    height:5%;
+    border:1px solid black;
+    align:auto;
+    margin:auto;
+}
+
+td{
+    min-width:40px;
+
+    min-height: 20px; 
+
+    border-bottom: 1px solid black;
+}
+
+th{
+    background-color:#cccccc; 
+    font-weight: bold;
+     border-bottom: 1px solid black;
+}
+
+.lineheader{
+    font-weight: bold;
+    background-color: #cccccc;
+}
+
+
+#formula{
+    display:block;
+    width: 500px;
+    background-color:white;
+    border:solid 1px;
+    margin-bottom: 10px;
+}
+
+
+.cell{
+    border:1px solid grey;
+    padding:0px 0px 0px 0px;
+    margin: 0px;
+    text-align: center;
+    vertical-align: center;
+}
+
+.beinghovered{
+    background-color:#ffff99;
+    border:1px solid black;
+}
+
+.cellformula
+{
+    visibility: hidden; 
+}
+
+
+
+
+

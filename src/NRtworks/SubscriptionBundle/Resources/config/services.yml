@@ -1,0 +1,10 @@
+## YAML Template.
+---
+
+parameters:
+    # ...
+    NRtworks.SubscriptionBundle.Registration.class: NRtworks\SubscriptionBundle\Controller\RegistrationController
+
+services:
+    RegisterAdminUser:
+        class: "%NRtworks.SubscriptionBundle.Registration.class%"

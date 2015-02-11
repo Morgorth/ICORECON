@@ -1,0 +1,13 @@
+ {% extends '::base.html.twig' %}
+
+{% block title %}Subscribe to  ICO reconciliator{% endblock %}
+
+ {% block body %}
+
+<form action="{{ path('_add_new_customer') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" />
+</form>
+      
+ {% endblock %}

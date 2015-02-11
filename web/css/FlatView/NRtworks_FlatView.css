@@ -1,0 +1,38 @@
+
+/* ################################# FlatView data edition (with angular) CSS file ################################## */
+
+/* ****************************  Main page styling *************************** */
+
+.toolbox
+{
+    margin-top:15px;
+    margin-left:15px;
+}
+
+.main_container
+{
+    margin-top:15px;
+    margin-left:15px;
+    border:solid 1px;
+}
+
+
+/* ****************************  Styling element properties *************************** /
+
+/* class used to style all the properties of an element */
+.element_property
+{
+        display:inline;
+}
+
+.NRtworks_elementTeBeDeleted
+{
+    text-decoration: line-through;
+    color:black;
+}
+
+.NRtworks_isANewElement
+{    
+    background-color: #ccf994;
+}
+

@@ -1,0 +1,41 @@
+
+<div class="angular-delimiter"> 
+
+    <div class="main_container">
+
+       
+        {%verbatim %}
+            <br/><input ng-model="search" type="text"/>
+            <button class="btn btn-primary" ng-click="addNewElement()">Add a new {{ dimension }}</button>
+            <button class="btn btn-warning" ng-click="reload()">Reload</button> 
+            <button class="btn btn-success" ng-click="saveChanges()">Save the changes</button> 
+            <br/>
+            <br/>
+            <table class="table table-bordered table-hover table-condensed" name="NRtworks_editable_grid">
+                <tr style="font-weight: bold">
+                    <th style="width:35%" ng-repeat="field in fieldsParameters" ng-if="fieldsParameters[$index]['toDo']!='noShow'">
+                    <button type="button" class="btn btn-link" ng-click="orderByField=$index;orderByFieldName=field['fieldName']; reverseSort =!reverseSort">{{ field["fieldName"] }}</button>
+                    <span ng-show="orderByFieldName == field['fieldName']"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+                    </th>
+                    <th>
+                        <button type="button" class="btn btn-link">Delete</button>
+                    </th>
+                </tr>
+                <tr ng-repeat="element in data | filter:search | orderBy:orderByField:reverseSort" ng-Class="{'NRtworks_elementTeBeDeleted':element[nbFields+1]=='NRtworks_FlatView_ToD3l3t3','NRtworks_isANewElement':element[nbFields]=='NRtworks_FlatView_T0Cr3at3'}">        
+                    <td data-select-when-editing ng-repeat="field in fieldsParameters" ng-if="fieldsParameters[$index]['toDo']!='noShow'">                 
+                        <span editable-text="element[$index]" ng-if="fieldsParameters[$index]['editType']=='text'" onbeforesave="checkInput($data,element[$index],dimension,fieldsParameters[$index]['fieldName'])">
+                            {{ element[$index] }}       
+                        </span>
+                        <span editable-select="element[$index]" ng-if="fieldsParameters[$index]['editType']=='select'" e-ng-options="s.value as s.text for s in fieldsParameters[$index]['options']">
+                            {{ selectElement(element[$index],$index) || empty }}       
+                        </span>  
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="removeElement($index,element)" ng-if="element[nbFields+1] != 'NRtworks_FlatView_ToD3l3t3'">Delete</button>
+                        <button class="btn btn-warning" ng-click="removeElement($index,element)" ng-if="element[nbFields+1] === 'NRtworks_FlatView_ToD3l3t3'">Un-delete</button>
+                    </td>
+                </tr>
+            </table>
+        {% endverbatim %}
+    </div>
+</div>        

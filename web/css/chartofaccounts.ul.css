@@ -1,0 +1,131 @@
+
+/* ################################# Chart Of Accounts Desgin ################################## */
+
+
+/* global container */
+#COA_Set_Up{
+    margin-top:15px;
+    margin-left: 15px;
+    display:inline-block;
+    min-height:600px;
+    min-width:500px;
+}
+
+#element_edit{
+    margin-top:15px;
+    margin-left: 15px; 
+    border: 1px solid grey;
+    display:none;     
+}
+
+/* the div list container */
+#TreeContainer
+{
+    width:100%;
+    height:600px;
+    border-spacing: 0px;
+    margin-top:25px;
+    border: 1px solid black;
+    overflow:auto;
+    position:relative;
+}
+
+/* the UL list container */
+.children_list
+{
+    list-style-type: none;
+    
+    
+}
+
+
+/* the div containing the default element of the tree*/
+#default_element
+{
+    visibility:hidden;
+    display:none;
+}
+
+/* add a line button */
+#Add_A_Line
+{
+    margin-top: 25px  
+}
+
+/* main list element */
+.account_line
+{
+    position:relative;
+    margin-left: 5px;
+    min-height:35px;
+    font-family: verdana;
+    font-size: 12px;
+}
+
+/* container div  for the account */
+.account_container
+{
+   
+}
+
+/* div used to simulate an hovered account_line */
+.account_container_hovered
+{
+    border-bottom: 1px solid grey; 
+    background-color: #FFFFCC;
+}
+
+
+/* class of the actions property */
+.account_line_actions
+{
+   display:none;
+   visibility:hidden;
+   float:right;
+   width:25px;
+   margin-top:0px;
+   padding:0px;
+}
+
+.ui-sortable-placeholder {  
+    border: 3px dashed #aaa;  
+    height: 25px;  
+    width: 344px;  
+    background: #ccc;  
+}  
+
+.Action_Button
+{
+    cursor:pointer;
+    halign:right;
+    
+}
+
+/* background when a line is hovered by a droppable component*/
+.account_line_drop-hover
+{
+    background-color: grey;
+}
+
+
+/* ****************************  account elements *************************** /
+
+
+
+/* class used to style all the properties of an account */
+.element_property
+{
+        display:inline;
+}
+
+/* class used to style all the technical properties of an acocunt */
+.element_technical
+{
+        display:none;
+        visibility:hidden;
+}
+
+.account_to_delete
+{
+        text-decoration:line-through;
+}

@@ -1,0 +1,40 @@
+              
+              ## treeEdit with angular-ui-tree
+        
+  ## Home route
+_NRtworks_treeView_Home:
+    pattern:  /Management/treeview/{dimension}
+    defaults: { _controller: NRtworksTreeViewBundle:TreeView:treeView } 
+    
+  
+    ## routes to the views used by angular           
+_NRtworks_treeView_callEditTemplate:
+  pattern:  /treeViewEditGetTree
+  defaults: { _controller: NRtworksTreeViewBundle:TreeView:treeViewEditGetTree} 
+  options:
+    expose: true  
+       
+    
+_NRtworks_treeView_callFullEditTemplate:
+  pattern:  /treeEdit_fullEdit
+  defaults: { _controller: NRtworksTreeViewBundle:TreeView:treeEdit_fullEdit} 
+  options:
+    expose: true     
+        
+        
+   ## RESTful API routes     
+_API_getTree:
+  pattern: /_API_getTree
+  defaults:  {_controller: NRtworksTreeViewBundle:TreeView:_API_getTree}
+  requirements:
+    _method: POST
+  options:
+    expose: true
+    
+_API_saveTree:
+  pattern: /_API_saveTree
+  defaults:  {_controller: NRtworksTreeViewBundle:TreeView:_API_saveTree}
+  requirements:
+    _method: POST
+  options:
+    expose: true

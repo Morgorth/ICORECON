@@ -1,0 +1,132 @@
+ {# src/Acme/HelloBundle/Resources/views/Hello/index.html.twig #}
+ {% extends '::base.html.twig' %}
+
+{% macro recursiveChildren(Account) %}
+
+
+    <li class=account_line ui-state-default>
+        <div class="account_container">
+            <p class=account_property account_number>{{ Account.code }}</p>
+            <p class=account_property account_name>{{Account.name}}</p>
+            <p class=account_property account_options></p>
+            <p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+        </div>
+        {% if Account.children|length %}
+            <ul class="children_list">
+                {% for child in Account.children %}
+                    {{ _self.recursiveChildren(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}                    
+    </li>  
+{% endmacro %}
+
+ {% block body %}
+
+
+
+<h1> Set up your Chart of Accounts</h1>
+
+<div id="COA_Set_Up">
+
+    <div id="account_edit">
+        <input type="text" id="account_code_to_edit" value="Account code...">
+        <input type="text" id="account_name_to_edit" value="Account name...">        
+        <input type="button" value="Ok" id="Action_Edit_Ok">
+    </div>
+  
+    <div id="dialog_for_delete" title="Delete verification"></div>
+
+    <ul id="COA_Table">
+        
+        {% for account in COA %}
+            {% if account.parent is null %}
+                <li class="account_line ui-state-default">
+                    <div class="account_container">
+                    <p class="account_property account_code">{{ account.code }}</p>
+                    <p class="account_property account_name">{{ account.name }}</p> 
+                    <p class="account_property account_options"></p>
+                    <p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+                    </div>
+                    <ul class="children_list">  
+                    {% for children in account.children %}
+                        {{ _self.recursiveChildren(children) }}
+                    {% endfor %}
+                    </ul>    
+                        
+                    {#<ul class="children_list">                                              
+                        {% for children in account.children %}
+                            <li class=account_line ui-state-default>
+                                <div class="account_container"><p class=account_property account_number>( {{ children.code }} )</p><p class=account_property account_name>{{children.name}}</p><p class=account_property account_options></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+                                </div>
+                            </li>                                
+                        {% endfor %}
+                    </ul>#}        
+                </li>  
+            {% endif %}
+        {% endfor %}
+
+
+    </ul>   
+
+    <div id="Alter_COA_Table">
+        <input type="button" value="Add a line" id="Add_A_Line">
+
+    </div>
+</div>  
+
+<script>
+    $(document).ready(function() {
+        console.log("ready!");
+
+        var edited_account_line;
+
+        make_draggable();
+        make_droppable();
+        start_edit();
+        hovered_style();
+        delete_account();
+        
+
+           
+        
+        $("#COA_Table").sortable();
+
+ 
+        //add a new line : the code of an account line is here
+        $("#Add_A_Line").click(function() {
+            $('#COA_Table').append('<li class=account_line ui-state-default><div class="account_container"><p class=account_property account_code>xxxxxx</p><p class=account_property account_name>New Account</p><p class=account_property account_options></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p></div></li> ')
+                    , make_draggable(), make_droppable(), start_edit(),hovered_style() ,delete_account()
+       })
+        
+        // when click on the OK button to save and edition
+        $("#Action_Edit_Ok").click(function(){
+            save_changes();
+        })
+        
+        //listener when users hits enter on the textbox to edit
+        $("#account_name_to_edit").keydown(function(event){
+            if (event.which == 13)
+            {
+                save_changes();
+                
+            }
+        })
+        
+        //listener when users hits enter on the textbox to edit
+        $("#account_code_to_edit").keydown(function(event){
+            if (event.which == 13)
+            {
+                save_changes();
+                
+            }
+        })
+        
+        /* style */  
+ 
+
+    });
+
+    </script>
+
+ {% endblock %}

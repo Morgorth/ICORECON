@@ -1,0 +1,112 @@
+ {# src/Acme/HelloBundle/Resources/views/Hello/index.html.twig #}
+ {% extends '::base.html.twig' %}
+ {% import 'NRtworksChartOfAccountsBundle:macro:recursive_tree_account.html.twig' as tree %}
+
+ {% block javascripts %}
+    {{ parent() }}
+    <script>
+           var edited_account_line;
+           var to_save = new Array();
+           var accounts_json = {{ TreeHierarchy|json_encode|raw }};
+           var default_object = {{default_object|json_encode|raw}};                  
+           var highest_id = {{ highestID }};
+    </script>
+    <script type="text/javascript" src="{{ asset('js/classes.js')}}"></script>
+ {% endblock %}
+    
+ {% block body %}
+
+    
+    
+<h1> Set up your Chart of Accounts</h1>
+
+<div id="COA_Set_Up">
+
+    <div id="element_edit">
+        
+        {{ form(edit_form) }}
+        <input type="button" value="Ok" id="Action_Edit_Ok">
+    </div>
+  
+    <div id="dialog_for_delete" title="Delete verification"></div>
+    
+    <div id="TreeContainer">
+        <ul id="TreeHierarchy" class="children_list">
+
+            {{ tree.recursive_tree_account(TreeHierarchy,0) }}
+
+        </ul>   
+    </div>        
+            
+    <div id="Alter_COA_Table">
+        <input type="button" value="Add a line" id="Add_A_Line">
+        <input type="button" value="Save your changes" id="Save_Changes">
+
+    </div>
+
+    <div id="default_element">
+       {{ tree.recursive_tree_account(default_object) }}         
+    </div>
+    
+</div>  
+
+
+<script>
+    $(document).ready(function() {                  
+        console.log("ready!");
+                        
+        activate_tree();         
+        
+        // this is the function to add a new line
+        $("#Add_A_Line").click(function() {
+            
+            //change the id of the default element
+            $("#default_element").children('li').children('div').children('p').eq(0).html(highest_id);
+            // add the default element to the tree
+            $("#default_element").children('li').clone().appendTo($("#TreeHierarchy"));
+            $("#TreeHierarchy").children('li').last().show("pulsate");
+            
+            // re launch the js functions to make the new element usable
+           activate_tree();
+            
+            //increasing the highest id for the next new account
+            highest_id++;
+                                                                                
+       });
+       
+        $("#Save_Changes").click(function() {                        
+              browsepage_from($("#starting_elem"));
+              sendDataToSS(to_save);               
+        });
+        
+        // when click on the OK button to save and edition
+        $("#Action_Edit_Ok").click(function(){
+            js_account_modified();
+        });
+        
+        //listener when users hits enter on the textbox to edit
+        $("#account_name_to_edit").keydown(function(event){
+            if (event.which == 13)
+            {
+                js_account_modified();
+                
+            }
+        });
+        
+        //listener when users hits enter on the textbox to edit
+        $("#account_code_to_edit").keydown(function(event){
+            if (event.which == 13)
+            {
+                js_account_modified();
+                
+            }
+        });
+        
+        /* style */  
+ 
+
+    });
+
+    </script>
+
+ {% endblock %}

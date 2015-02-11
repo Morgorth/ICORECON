@@ -1,0 +1,24 @@
+
+ {% extends '::base.html.twig' %}
+
+ {% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('js/UserManager_Angular.js')}}"></script>
+ {% endblock %}
+
+
+ {% block body %}
+
+
+
+<h1>User Manager</h1>
+
+
+<div data-ng-view></div>
+
+<br/>
+<a href="#/">Back</a>
+<br/>
+<a href="#/addnew">Add a new user</a>
+ {% endblock %}

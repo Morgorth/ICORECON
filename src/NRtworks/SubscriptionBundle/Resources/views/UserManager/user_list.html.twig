@@ -1,0 +1,68 @@
+
+
+
+<div class="angular-delimiter">
+
+    <div class="toolbox">
+        Search: <input ng-model="search.username" type="text"/>
+
+    </div>    
+
+    <div class="main_container">
+
+        
+        {%verbatim %}
+        <table class="table table-bordered table-hover table-condensed" name="NRtworks_editable_grid">
+        <tr style="font-weight: bold">
+            <th style="width:35%">
+                <button type="button" class="btn btn-link" ng-click="orderByField='username'; reverseSort = !reverseSort">Username</button>
+                <span ng-show="orderByField == 'username'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </th>
+            <th style="width:20%">
+                <button type="button" class="btn btn-link" ng-click="orderByField='email'; reverseSort = !reverseSort">Email</button>
+                <span ng-show="orderByField == 'email'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </th>
+            <th style="width:20%">
+                <button type="button" class="btn btn-link" ng-click="orderByField='type.id'; reverseSort = !reverseSort">Type</button>
+                <span ng-show="orderByField == 'type.id'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </th>
+            <th style="width:25%">
+                <button type="button" class="btn btn-link">Delete</button>
+            </th>
+        </tr>
+        <tr ng-repeat="user in users | filter:search | orderBy:orderByField:reverseSort" ng-Class="{'to_be_deleted':user.to_delete.length>0,'new_element':user.id=='new'}">        
+            <td data-select-when-editing>                 
+             
+            <span editable-text="user.username" onbeforesave="checkUsername($data,user)">
+                {{ user.username || 'empty' }}               
+            </span>                
+            </td>
+            
+            <td>            
+            <span editable-email="user.email" ng-if="user.email == 'email@mycompany.com'">
+              {{ user.email }}
+            </span ng-if="user.email == 'email@mycompany.com'">
+                    
+            <span ng-if="user.email != 'email@mycompany.com'">
+            {{ user.email }}
+            </span ng-if="user.email != 'email@mycompany.com'">                       
+            </td>
+            
+            <td>            
+                <span editable-select="user.type.id" e-ng-options="s.id as s.name for s in types">
+                    {{ showStatus(user) || 'not set' }}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click="removeUser($index,user)" ng-if="user.to_delete !='yes'">Delete</button>
+                <button class="btn btn-warning" ng-click="unDeleteUser($index)" ng-if="user.to_delete == 'yes'">Un-delete</button>
+            </td>
+        </tr>
+        </table>
+        
+    <br/> <button class="btn btn-default" ng-click="addUser()">Add a user</button> 
+    <button class="btn btn-success" ng-click="saveChanges()">Save the changes</button> 
+        {% endverbatim %}
+   
+    </div>
+</div>        

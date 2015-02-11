@@ -1,0 +1,83 @@
+NRtworks\BusinessDimensionBundle\Entity\Account:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [name,chartofaccount]
+            message: "This name is already taken in your Chart of Accounts"
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [code,chartofaccount]
+            message: "This code is already taken in your Chart of Accounts"
+    properties:
+        name:
+            - NotBlank: 
+                message: "Please fill this field"
+            - Length:
+                min: 3
+                max: 100
+                minMessage: "The name must be at least 3 characters long"
+                maxMessage: "The name cannot be longer than 100 characters long"
+            #- Regex:
+             #   pattern: '^\w+$'
+              #  match: true
+               # message: "It cannot contain the following characters: &\"\'()[]{}"
+        code:
+            - NotBlank: ~
+            - Length:
+                min: 3
+                max: 50
+                minMessage: "The code must be at least 3 characters long"
+                maxMessage: "The code cannot be longer than 50 characters long"
+
+NRtworks\BusinessDimensionBundle\Entity\BusinessUnit:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [name,customer]
+            message: "You already have a business unit with this name"
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [code,customer]
+            message: "You already have a business unit with this code"
+    properties:
+        name:
+            - NotBlank: 
+                message: "Please fill this field"
+            - Length:
+                min: 3
+                max: 100
+                minMessage: "The name must be at least 3 characters long"
+                maxMessage: "The name cannot be longer than 100 characters long"
+            #- Regex:
+             #   pattern: '^\w+$'
+              #  match: true
+               # message: "It cannot contain the following characters: &\"\'()[]{}"
+        code:
+            - NotBlank: ~
+            - Length:
+                min: 3
+                max: 50
+                minMessage: "The code must be at least 3 characters long"
+                maxMessage: "The code cannot be longer than 50 characters long"
+                
+NRtworks\BusinessDimensionBundle\Entity\ChartOfAccounts:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [name,customer]
+            message: "You already have a chart of account of this name"
+    properties:
+        name:
+            - NotBlank: 
+                message: "Please fill this field"
+            - Length:
+                min: 3
+                max: 50
+                minMessage: "The name must be at least 3 characters long"
+                maxMessage: "The name cannot be longer than 50 characters long"
+            #- Regex:
+             #   pattern: '^\w+$'
+              #  match: true
+               # message: "It cannot contain the following characters: &\"\'()[]{}"
+        description:
+            - NotBlank: ~
+            - Length:
+                min: 3
+                max: 100
+                minMessage: "The name must be at least 3 characters long"
+                maxMessage: "The name cannot be longer than 50 characters long"                

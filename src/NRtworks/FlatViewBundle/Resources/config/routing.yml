@@ -1,0 +1,31 @@
+              
+              ## treeView with angular x editable
+        
+  ## Home route
+_NRtworks_FlatView_Home:
+    pattern:  /Management/FlatView/{dimension}
+    defaults: { _controller: NRtworksFlatViewBundle:FlatView:home } 
+    
+  ## main template
+_NRtworks_FlatView_elementList:
+  pattern:  /Management/angTemplate/FlatView/elementList
+  defaults: { _controller: NRtworksFlatViewBundle:FlatView:elementList }   
+  options:
+    expose: true    
+    
+   ## RESTful API routes     
+_NRtworks_FlatView_API_getData:
+  pattern: /FlatView/_API_getData
+  defaults:  {_controller: NRtworksFlatViewBundle:FlatView:getData}
+  requirements:
+    _method: POST
+  options:
+    expose: true
+    
+_NRtworks_FlatView_API_saveData:
+  pattern: /FlatView/_API_saveData
+  defaults:  {_controller: NRtworksFlatViewBundle:FlatView:saveData}
+  requirements:
+    _method: POST
+  options:
+    expose: true

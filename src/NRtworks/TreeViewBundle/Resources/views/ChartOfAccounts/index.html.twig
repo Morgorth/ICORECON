@@ -1,0 +1,92 @@
+ {# src/Acme/HelloBundle/Resources/views/Hello/index.html.twig #}
+ {% extends '::base.html.twig' %}
+
+ {% block body %}
+
+
+<h1> Set up your Chart of Accounts</h1>
+
+<div id="COA_Set_Up">
+
+    <div id="account_edit">
+        <input type="text" id="account_name_to_edit" value="Account name..."><input type="button" value="Ok" id="Action_Edit_Ok">
+
+    </div>
+    
+    <div id="dialog_for_delete" title="Delete verification"></div>
+
+
+    <ul id="COA_Table">
+
+        <li class="account_line ui-state-default">
+            <div class="account_container">
+            <p class="account_property account_name">Root</p><p class="account_property account_number"></p><p class="account_property account_options"></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+            </div>
+        </li>     
+        <li class="account_line ui-state-default">
+            <div class="account_container">
+            <p class="account_property account_name">Loss</p><p class="account_property account_number"></p><p class="account_property account_options"></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+            </div>
+        </li> 
+
+        <li class="account_line ui-state-default">
+            <div class="account_container">
+            <p class="account_property account_name">Gain</p><p class="account_property account_number"></p><p class="account_property account_options"></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p>
+            </div>
+        </li>              
+
+
+    </ul>   
+
+    <div id="Alter_COA_Table">
+        <input type="button" value="Add a line" id="Add_A_Line">
+
+    </div>
+</div>  
+
+<script>
+    $(document).ready(function() {
+        console.log("ready!");
+
+        var edited_account_line;
+
+        make_draggable();
+        make_droppable();
+        start_edit();
+        hovered_style();
+        delete_account();
+        
+
+           
+        
+        $("#COA_Table").sortable();
+
+        /* actions */
+
+        $("#Add_A_Line").click(function() {
+            $('#COA_Table').append('<li class=account_line ui-state-default><div class="account_container"><p class=account_property account_name>New Account</p><p class=account_property account_number></p><p class=account_property account_options></p><p class="account_property account_line_actions"><i class="icon-remove-circle Action_Button"></i></p></div></li> ')
+                    , make_draggable(), make_droppable(), start_edit(),hovered_style() ,delete_account()
+       })
+        
+        
+        $("#Action_Edit_Ok").click(function(){
+            save_changes();
+        })
+        
+        
+        $("#account_name_to_edit").keydown(function(event){
+            if (event.which == 13)
+            {
+                save_changes();
+                
+            }
+        })
+        
+        /* style */  
+ 
+
+    });
+
+    </script>
+
+ {% endblock %}
