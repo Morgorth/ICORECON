@@ -253,9 +253,10 @@ treeView.controller('fullEdit',['$scope','$stateParams','$state','reUsableData',
     //the following function is used to build a select element
     $scope.selectElement = function(element,index) {
         var selected = [];
+        //console.log(element);
         if(element) {
 
-          selected = $filter('filter')($scope.fieldsSettings[index][3],{value: element});
+          selected = $filter('filter')($scope.fieldsSettings[index]['options'],{value: element});
         }
         return selected.length ? selected[0].text : 'Not set';
       };

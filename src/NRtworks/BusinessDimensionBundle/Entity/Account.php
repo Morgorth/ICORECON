@@ -103,7 +103,7 @@
         return $result;
     }
     
-    //this method return the list of the field's name to be edited in the tree editing
+    //this method returns the list of the field's name to be edited in the tree editing
     public function fieldsToEditinTreeEdit()
     {
         $toEdit[0] = array(0=>"id",1=>0,2=>"text");
@@ -114,6 +114,19 @@
         $toEdit[5] = array(0=>"nodes",1=>0,2=>"text");                
         return $toEdit;
     }
+    
+    public function arrayalizeForFront()
+    {
+        return array(
+            'id' =>  $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'sense' =>$this->sense,
+            'nodes'=> [],
+            'parentid'=> $this->parent,
+            'root'=>$this->root
+        );
+    }    
 
     /**
      * Get id

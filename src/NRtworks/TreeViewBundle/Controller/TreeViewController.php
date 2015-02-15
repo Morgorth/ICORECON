@@ -265,11 +265,16 @@ class TreeViewController extends Controller
             // and we need a default object to allow the user to             
             $defaultObject = $setUpForDimension->getDefaultObject($dimension,$highest);
             
+            $defaultTrueObject = $setUpForDimension->getDefaultTrueObject($dimension);
+            $fieldParameters = $defaultTrueObject->getFieldsParameters();
+            
+            $fieldParameters = $setUpForDimension->buildSelectElements($dimension,$fieldParameters,$customer);
+            
             // and build the parameters array containing the tree + other needed elements
             $parametersArray = [];
             $parametersArray["tree"] = $arrayTree;
             $parametersArray["dimension"] = $dimension;
-            $parametersArray["fieldsSettings"] = $setUpForDimension->getFieldsNameToEdit($dimension);
+            $parametersArray["fieldsSettings"] = $fieldParameters;
             $parametersArray["defaultObject"] = $defaultObject;
             //$parametersArray["highestID"] = $highest; 
             

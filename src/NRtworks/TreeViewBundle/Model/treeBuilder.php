@@ -20,7 +20,7 @@ class treeBuilder extends \Symfony\Component\DependencyInjection\ContainerAware{
       
     public function buildBasicTree($allElements)
     {
-        $allElementsArray = $this->rebuildObjectsAsArrays($allElements);
+        $allElementsArray = $this->arrayFunctions->rebuildObjectsAsArraysForTreeFlatView($allElements);
 
         //$root = $this->arrayFunctions->arrayReturnElementContainingAPropertyByValue($allElementsArray,"root",1);
         return $result = $this->theRecursion($allElementsArray,NULL);
@@ -48,31 +48,6 @@ class treeBuilder extends \Symfony\Component\DependencyInjection\ContainerAware{
             }
         }
         return $branch;
-    }
-    
-    public function rebuildObjectsAsArrays($allElements)
-    {
-        $result = [];
-        $i = 0;
-        foreach($allElements as $element)
-        {
-            $result[$i] = $element->jsonSerialize();
-            if(isset($result[$i]["root"]))
-                {
-                if($result[$i]["root"] != 1)
-                {
-                    $result[$i]["parentid"] = $element->getParent()->getId();
-                }
-                else
-                {
-                    
-                }
-            }
-            
-            $i++;
-        }
-
-        return $result;
     }
       
 }

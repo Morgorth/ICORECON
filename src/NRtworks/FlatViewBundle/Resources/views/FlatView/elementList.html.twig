@@ -23,10 +23,13 @@
                 </tr>
                 <tr ng-repeat="element in data | filter:search | orderBy:orderByField:reverseSort" ng-Class="{'NRtworks_elementTeBeDeleted':element[nbFields+1]=='NRtworks_FlatView_ToD3l3t3','NRtworks_isANewElement':element[nbFields]=='NRtworks_FlatView_T0Cr3at3'}">        
                     <td data-select-when-editing ng-repeat="field in fieldsParameters" ng-if="fieldsParameters[$index]['toDo']!='noShow'">                 
-                        <span editable-text="element[$index]" ng-if="fieldsParameters[$index]['editType']=='text'" onbeforesave="checkInput($data,element[$index],dimension,fieldsParameters[$index]['fieldName'])">
+                        <span ng-if="fieldsParameters[$index]['toDo']=='show'">
                             {{ element[$index] }}       
                         </span>
-                        <span editable-select="element[$index]" ng-if="fieldsParameters[$index]['editType']=='select'" e-ng-options="s.value as s.text for s in fieldsParameters[$index]['options']">
+                        <span editable-text="element[$index]" ng-if="fieldsParameters[$index]['editType']=='text' && fieldsParameters[$index]['toDo']=='edit'" onbeforesave="checkInput($data,element[$index],dimension,fieldsParameters[$index]['fieldName'])">
+                            {{ element[$index] }}       
+                        </span>
+                        <span editable-select="element[$index]" ng-if="fieldsParameters[$index]['editType']=='select' && fieldsParameters[$index]['toDo']=='edit'" e-ng-options="s.value as s.text for s in fieldsParameters[$index]['options']">
                             {{ selectElement(element[$index],$index) || empty }}       
                         </span>  
                     </td>

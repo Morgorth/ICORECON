@@ -60,6 +60,22 @@
     protected $children;
     
     /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\icousers")     
+     **/
+    private $manager; 
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\icousers")     
+     **/
+    private $substitute;  
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\icousers")     
+     **/
+    private $controller;    
+    
+    
+    /**
      * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\Customer")     
      **/
     private $customer;
@@ -104,20 +120,7 @@
         $result["nodes"] = [];
         return $result;
     }
-    
-    //this method return the list of the field's name to be edited in the tree editing
-    public function fieldsToEditinTreeEdit()
-    {
-        //the array model is [0=>"name of the property",1=>is not editable in the tree 1 is, 2=> type of input,3=>more parameter for the input, example for a select]
-        $toEdit[0] = array(0=>"id",1=>0,2=>"text");
-        $toEdit[1] = array(0=>"name",1=>1,2=>"text");
-        $toEdit[2] = array(0=>"code",1=>1,2=>"text");
-        $toEdit[3] = array(0=>"country",1=>1,2=>"text");
-        $toEdit[5] = array(0=>"root",1=>0,2=>"text");
-        $toEdit[6] = array(0=>"nodes",1=>0,2=>"text");                
-        return $toEdit;
-    }
-    
+        
         /**
          * Get id
          */
@@ -236,9 +239,57 @@
     }
 
     /**
+     * Set manager
+     */
+    public function setManager(\NRtworks\SubscriptionBundle\Entity\Manager $manager = null)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * Get manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }    
+
+    /**
+     * Set substitute
+     */
+    public function setSubstitute(\NRtworks\SubscriptionBundle\Entity\Substitute $substitute = null)
+    {
+        $this->substitute = $substitute;
+    }
+
+    /**
+     * Get substitute
+     */
+    public function getSubstitute()
+    {
+        return $this->substitute;
+    }        
+
+    /**
+     * Set controller
+     */
+    public function setController(\NRtworks\SubscriptionBundle\Entity\Controller $controller = null)
+    {
+        $this->controller = $controller;
+    }
+
+    /**
+     * Get controller
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }        
+    
+    /**
      * Set customer
      */
-    public function setCustomer(\NRtworks\SubscriptionBundle\Entity\Customer $customer = null)
+    public function setCustomer(\NRtworks\SubscriptionBundle\Entity\Customer $customer)
     {
         $this->customer = $customer;
     }
@@ -250,6 +301,54 @@
     {
         return $this->customer;
     }
+
+    //this method return the list of the field's name to be edited in the tree editing
+    public function fieldsToEditinTreeEdit()
+    {
+        //the array model is [0=>"name of the property",1=>is not editable in the tree 1 is, 2=> type of input,3=>more parameter for the input, example for a select]
+        $toEdit[0] = array(0=>"id",1=>0,2=>"text");
+        $toEdit[1] = array(0=>"name",1=>1,2=>"text");
+        $toEdit[2] = array(0=>"code",1=>1,2=>"text");
+        $toEdit[3] = array(0=>"country",1=>1,2=>"text");
+        $toEdit[5] = array(0=>"root",1=>0,2=>"text");
+        $toEdit[6] = array(0=>"nodes",1=>0,2=>"text");                
+        return $toEdit;
+    }
+    
+    public function getFieldsParameters()
+    {       
+        $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
+        $info[1] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
+        $info[2] = array("fieldName"=>"code","toDo"=>"edit","editType"=>"text","options"=>"none");
+        $info[3] = array("fieldName"=>"country","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[4] = array("fieldName"=>"root","toDo"=>"noShow","editType"=>"select","options"=>"none");
+        $info[5] = array("fieldName"=>"parentid","toDo"=>"noShow","editType"=>"select","options"=>"none");        
+        $info[6] = array("fieldName"=>"nodes","toDo"=>"noShow","editType"=>"select","options"=>"none");        
+        $info[7] = array("fieldName"=>"manager","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>"no","selectFields"=>array("id","username")));        
+        $info[8] = array("fieldName"=>"substitute","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>"no","selectFields"=>array("id","username")));        
+        $info[9] = array("fieldName"=>"controller","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
+        return $info;
+    }
+    
+    public function arrayalizeForTreeFlatView()
+    {
+        if(is_object($this->getManager())){$manager = $this->getManager()->getId();}else{$manager = "Not set";}
+        if(is_object($this->getSubstitute())){$substitute = $this->getSubstitute()->getId();}else{$substitute = "Not set";}
+        if(is_object($this->getController())){$controller = $this->getController()->getId();}else{$controller = "Not set";}
+        return array(
+            'id' =>  $this->id,
+            'name' => $this->name,
+            'code'=> $this->code,
+            'country' => $this->country,
+            'root'=>$this->root,
+            'parentid'=> $this->parent,
+            'nodes'=> [],
+            'manager'=> $manager,
+            'substitute'=>$substitute,
+            'controller'=>$controller,
+            
+        );
+    } 
     
     public function jsonSerialize()
     {

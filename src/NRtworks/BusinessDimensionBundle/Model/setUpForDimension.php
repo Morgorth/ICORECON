@@ -4,6 +4,7 @@ namespace NRtworks\BusinessDimensionBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use NRtworks\GlobalUtilsFunctionsBundle\Services\arrayFunctions;
+use NRtworks\GlobalUtilsFunctionsBundle\Services\APIGetData;
 
 class setUpForDimension extends \Symfony\Component\DependencyInjection\ContainerAware{
     
@@ -11,13 +12,16 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
     protected $arrayFunctions;
     protected $possible;
     protected $noexist;
+    protected $API;
 
 
-    public function __construct(EntityManager $em, arrayFunctions $arrayFunctions)
+    public function __construct(EntityManager $em, arrayFunctions $arrayFunctions, APIGetData $API)
     {
         $this->em = $em;
         $this->arrayFunctions = $arrayFunctions;
-        $this->possible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency");
+        $this->API = $API;
+        $this->possible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","Campaign");
+        $this->remotePossible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","Campaign","icousers","Usertype");
         $this->noexist = "Unauthorized dimension";
     } 
       
@@ -84,12 +88,16 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
     }
     
     //the following function returns an object of the given dimension
-    public function getDefaultTrueObject($dimension,$highestID = null)
+    public function getDefaultTrueObject($dimension,$highestID = null, $number = null)
     {
         $address = $this->getAddress($dimension);  
-        if($highestID != null)
+        if($highestID != null && $number != null)
         {
-            $element = new $address($highestID);                    
+            $element = new $address($highestID,$number);                    
+        }
+        elseif($highestID != null)
+        {
+            $element = new $address($highestID); 
         }
         else
         {
@@ -107,6 +115,170 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
         $result = $element->fieldsToEditinTreeEdit();
         return $result;
     }    
+    
+    //the following function is build an array for a "select" element to be passed to the front
+    public function buildSelectElements($dimension,$fieldParameters,$customer)
+    {
+        foreach($fieldParameters as &$field)
+        {
+            if($field["toDo"] == "edit" && $field["editType"] == "select")
+            {
+                //if we are here it means the field is to be edited and is a select, so let's check the options
+                if(isset($field["options"]["remote"]) && $field["options"]["remote"] != "no")
+                {
+                    $remoteDimension = $field["options"]["remote"];
+                    //here means that the field is remote so we need to request the data given some parameters
+                    if(in_array($field["options"]["remote"],$this->remotePossible))
+                    {
+                        
+                        if($remoteDimension == "Account")
+                        {
+                            $whereArray["chartofaccount"] = 1;
+                        }
+                        elseif($remoteDimension == "Cycle" || $remoteDimension == "Version" || $remoteDimension == "Period" || $remoteDimension == "FiscalYear")
+                        {
+                            // no need for generic selector here
+                        }
+                        else 
+                        {
+                            $whereArray["customer"] = $customer;
+                        }
+                        
+                        if(is_array($field["options"]["fieldFilter"]))
+                        {
+                            foreach($field["options"]["fieldFilter"] as $key=>$value)
+                            {
+                                $whereArray[$key] = $value;
+                            }                            
+                        }
+                        //\Doctrine\Common\Util\Debug::dump($whereArray);
+                        if(isset($whereArray))
+                        {
+                            $elementList = $this->API->requestSimpleByArray($this->API->whichBundle($remoteDimension),$remoteDimension,$whereArray);
+                        }
+                        else
+                        {
+                            $elementList = $this->API->requestAll($this->API->whichBundle($remoteDimension),$remoteDimension);
+                        }
+                        
+                        //\Doctrine\Common\Util\Debug::dump($elementList);
+                        $elementsAsArray = $this->arrayFunctions->rebuildObjectsAsArrays($elementList);
+                        //\Doctrine\Common\Util\Debug::dump($elementsAsArray);
+                        
+                        //ok we got all we need so let's build the array used to build the HTML select element
+                        $arrayHTML = [];
+                        foreach($elementsAsArray as $element)
+                        {
+                            $subarray = array("value"=>$element[$field["options"]["selectFields"][0]],"text"=>$element[$field["options"]["selectFields"][1]]);
+                            array_push($arrayHTML,$subarray);
+                        }
+                        
+                        $field["options"] = $arrayHTML;
+                    }
+                    else
+                    {
+                        return $this->noexist;
+                    }
+                }
+                else
+                {
+                    //here means that the field must have a "local" parameter, set up below
+                    switch($dimension)
+                    {
+                        case "Campaign":
+                            if($field["fieldName"] == "fiscalYear")
+                            {
+                                $field["options"] = $this->getFiscalYearList("selectArray");
+                            }
+                            elseif($field["fieldName"] == "version")
+                            {
+                                $field["options"] = $this->getVersionList("selectArray");
+                            }
+                            else
+                            {
+                                $field["options"] = array("value"=>"throwError","text"=>"an error has occured");
+                            }
+                            break;
+                        case "Account":
+                            
+                            break;
+                        case "BusinessUnit":
+                            if($field["fieldName"] == "country")
+                            {
+                                $field["options"] = array("value"=>"FR","text"=>"France");
+                            }
+                            else
+                            {
+                                $field["options"] = array("value"=>"throwError","text"=>"an error has occured");
+                            }
+                            break;
+                            
+                        default: 
+                            $field["options"] = array("value"=>"throwError","text"=>"an error has occured");
+                            break;
+                    }
+                }
+            }
+        }
+        
+        return $fieldParameters;
+    }  
+    
+    //the following function returns a list of the fiscal years, however you want it
+    public function getFiscalYearList($how)
+    {
+        switch($how)
+        {
+            case "simpleArray":
+                return array(2012,2013,2014,2015,2016,2017,2018,2019,2020);
+                break;
+            case "associativeArray":
+                return array(2012=>2012,2013=>2013,2014=>2014,2015=>2015,2016=>2016,2017=>2017,2018=>2018,2019=>2019,2020=>2020);
+                break;
+            case "selectArray":  
+                $result = [];
+                $i = 0;
+                foreach($this->getFiscalYearList("simpleArray") as $year)
+                {
+                    $result[$i] = array("value"=>$year,"text"=>$year);
+                    $i++;
+                }
+                return $result;
+                break;
+                
+            default:
+                return "unknown case";
+                break;
+        }                
+    }
+    
+    //the following function returns a list of the versions, however you want it
+    public function getVersionList($how)
+    {
+        switch($how)
+        {
+            case "simpleArray":
+                return array(1,2,3,4,5);
+                break;
+            case "associativeArray":
+                return array(1=>1,2=>2,3=>3,4=>4,5=>5);
+                break;
+            case "selectArray":  
+                $result = [];
+                $i = 0;
+                foreach($this->getVersionList("simpleArray") as $version)
+                {
+                    $result[$i] = array("value"=>$version,"text"=>$version);
+                    $i++;
+                }
+                return $result;
+                break;            
+                
+            default:
+                return "unknown case";
+                break;
+        }                
+    }
     
     //the following function returns a list of elements from an entity given some conditions
     public function getFlatList($dimension,$customer = 0,$chartOfAccounts = 0)
@@ -167,6 +339,19 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $newObject->setDescription($element[2]);
                 return $newObject;
             }
+            if($dimension == "Campaign")
+            {
+                $address = $this->getAddress($dimension);                  
+                $newObject = new $address();
+                $newObject->setCustomer($customer);
+                $newObject->setNumber($element[1]);
+                $newObject->setFiscalYear($element[2]);
+                $newObject->setVersion($element[3]);
+                $newObject->setCycle($this->API->requestById("BusinessDimension","Cycle",$element[4]));
+                $newObject->setPeriod($this->API->requestById("BusinessDimension","Period",$element[5]));
+                
+                return $newObject;
+            }            
         }
         else
         {
@@ -192,6 +377,15 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
             {
                 $object->setName($element[1]);
                 $object->setDescription($element[2]);
+                return $object;
+            }
+            if($dimension == "Campaign")
+            {
+                $object->setNumber($element[1]);
+                $object->setFiscalYear($element[2]);
+                $object->setVersion($element[3]);
+                $object->setCycle($this->API->requestById("BusinessDimension","Cycle",$element[4]));
+                $object->setPeriod($this->API->requestById("BusinessDimension","Period",$element[5]));
                 return $object;
             }
         }

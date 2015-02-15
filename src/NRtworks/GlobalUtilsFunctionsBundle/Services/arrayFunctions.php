@@ -167,8 +167,47 @@ class arrayFunctions {
 
         }
         
+        return $result;        
+    }
+    
+    //the following function rebuilds an array of objects into an array of arrays
+    public function rebuildObjectsAsArrays($allElements)
+    {
+        $result = [];
+        $i = 0;
+        foreach($allElements as $element)
+        {
+            $result[$i] = $element->jsonSerialize();
+            $i++;
+        }
+
         return $result;
-        
+    }
+    
+       //the following function rebuilds an array of objects into an array of arrays modified to be used by the Flat/Tree View Bundle
+    public function rebuildObjectsAsArraysForTreeFlatView($allElements)
+    {
+        $result = [];
+        $i = 0;
+        foreach($allElements as $element)
+        {
+            $result[$i] = $element->arrayalizeForTreeFlatView();
+            if(isset($result[$i]["root"]))
+                {
+                if($result[$i]["root"] != 1)
+                {
+                    $result[$i]["parentid"] = $element->getParent()->getId();
+                }
+                else
+                {
+                    
+                }
+            }
+            
+            $i++;
+        }
+
+        return $result;
     }
     
     

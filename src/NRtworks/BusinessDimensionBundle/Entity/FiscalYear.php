@@ -6,12 +6,8 @@
     use Doctrine\ORM\Mapping as ORM;
     use Doctrine\Common\Collections\ArrayCollection;
     use JsonSerializable;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="FiscalYear")
- */
-
+ 
+    
     class FiscalYear implements JsonSerializable
     {
         /**

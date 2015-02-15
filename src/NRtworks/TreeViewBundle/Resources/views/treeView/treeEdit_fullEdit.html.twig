@@ -10,15 +10,18 @@
     <br/>
     <table class="table table-bordered table-hover table-condensed" name="NRtworks_editable_grid">
     {%verbatim %}
-    <tr ng-repeat="properties in elementToEdit" ng-if="fieldsSettings[$index][1]==1">
+    <tr ng-repeat="properties in elementToEdit" ng-if="fieldsSettings[$index]['toDo']!='noShow'">
             <td>
-                    {{ fieldsSettings[$index][0] }}
+                    {{ fieldsSettings[$index]['fieldName'] }}
             </td>
-            <td data-select-when-editing>                                    
-                <span editable-text="properties.prop" ng-if="fieldsSettings[$index][2]== 'text'" onbeforesave="checkInput($data,properties.prop,dimension,fieldsSettings[$index][0])">
+            <td data-select-when-editing>      
+                <span ng-if="fieldsSettings[$index]['toDo']=='show'">
                             {{ properties.prop || 'empty' }}               
                 </span>
-                <span editable-select="properties.prop" ng-if="fieldsSettings[$index][2]== 'select'" e-ng-options="s.value as s.text for s in fieldsSettings[$index][3]">
+                <span editable-text="properties.prop" ng-if="fieldsSettings[$index]['editType']== 'text' && fieldsSettings[$index]['toDo']=='edit'" onbeforesave="checkInput($data,properties.prop,dimension,fieldsSettings[$index]['fieldName'])">
+                            {{ properties.prop || 'empty' }}               
+                </span>
+                <span editable-select="properties.prop" ng-if="fieldsSettings[$index]['editType']== 'select' && fieldsSettings[$index]['toDo']=='edit'" e-ng-options="s.value as s.text for s in fieldsSettings[$index]['options']">
                             {{ selectElement(properties.prop,$index) || 'empty' }}               
                 </span>
             </td>                                

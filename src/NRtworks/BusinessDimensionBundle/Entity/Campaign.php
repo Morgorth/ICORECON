@@ -12,59 +12,73 @@
     use JMS\Serializer\Annotation\Expose;
     use JMS\Serializer\Annotation\Groups;
     use JMS\Serializer\Annotation\VirtualProperty;    
-
+   
+    
 /**
  * @ORM\Entity
- * @ORM\Table(name="ChartOfAccounts")
- * @ExclusionPolicy("all") 
+ * @ORM\Table(name="Campaign")
  */
 
-    class ChartOfAccounts implements JsonSerializable
+    class Campaign implements JsonSerializable
     {
-        /**
+     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
      */
 
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Expose
+     * @ORM\Column(type="integer", length=4)
      */
    
-    protected $name;  
-
-     /**
-     * @ORM\Column(type="string", length=100)
-     * @Expose
-     */
-   
-    protected $description;
+    protected $number;  
+    
     
     /**
-     * @ORM\OneToMany(targetEntity="NRtworks\BusinessDimensionBundle\Entity\Account", mappedBy="chartofaccount")
-     */
-    private $accounts;
+     * @ORM\Column(type="integer", length=4)     
+     **/
+    
+    private $fiscalYear;    
 
+     /**
+     * @ORM\Column(type="integer",length = 3)     
+     **/
+    
+    private $version;
+       
+    /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\BusinessDimensionBundle\Entity\Cycle")     
+     **/
+    private $cycle;    
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\BusinessDimensionBundle\Entity\Period")     
+     **/
+    
+    private $period;    
+    
     /**
      * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\Customer")     
      **/
-    private $customer;
+    
+    private $customer;    
+
 
     
     /**
      * Constructor
      */
-    public function __construct($id = NULL)
+    public function __construct($id = NULL,$number = 0)
     {
-        //the basic constructor is set to create a default object as we want it when creating a new one
-        $this->$accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->id = $id;
-        $this->name = "New chart of accounts";
-        $this->description = "New chart of accounts";
+        $this->number = $number;
+        $this->fiscalYear = "2015";
+        $this->version ="1";
+        $this->cycle = "Actuals";
+        $this->period = "January";
+        
     }
 
 
@@ -73,8 +87,11 @@
     {
         $result = Array();
         $result['id'] = $this->id;
-        $result['name'] = $this->name;
-        $result['description'] = $this->description;
+        $result['number'] = $this->number;
+        $result['fiscalYear'] = $this->fiscalYear;
+        $result['version'] = $this->version;
+        $result['cycle'] = $this->cycle;
+        $result['period'] = $this->period;
         return $result;
     }
 
@@ -104,55 +121,88 @@
     }
 
     /**
-     * Set name
+     * Set number
      */
-    public function setName($name)
+    public function setNumber($number)
     {
-        $this->name = $name;
+        $this->number = $number;
     }
 
     /**
-     * Get name
+     * Get number
      */
-    public function getName()
+    public function getNumber()
     {
-        return $this->name;
-    }
+        return $this->number;
+    }    
 
-    /**
-     * Set code
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get description
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
     
-   
-    /**
-     * Add children
+     /**
+     * set fiscalYear
      */
-    public function setAccounts(\NRtworks\BusinessDimensionBundle\Entity\Account $account)
+    public function setFiscalYear($fiscalYear = 2015)
     {
-        $this->accounts[] = $account;
+        $this->fiscalYear = $fiscalYear;
     }
 
     /**
-     * Get children
+     * Get fiscalYear
      */
-    public function getAccounts()
+    public function getFiscalYear()
     {
-        return $this->accounts;
+        return $this->fiscalYear;
+    }    
+    
+    /**
+     * set version
+     */
+    public function setVersion($version = 1)
+    {
+        $this->version = $version;
     }
 
     /**
+     * Get version
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    
+    /**
+     * set cycle
+     */
+    public function setCycle(\NRtworks\BusinessDimensionBundle\Entity\Cycle $cycle = null)
+    {
+        $this->cycle = $cycle;
+    }
+
+    /**
+     * Get cycle
+     */
+    public function getCycle()
+    {
+        return $this->cycle;
+    }
+
+    /**
+     * set period
+     */
+    public function setPeriod(\NRtworks\BusinessDimensionBundle\Entity\Period $period = null)
+    {
+        $this->period = $period;
+    }
+
+    /**
+     * Get period
+     */
+    public function getPeriod()
+    {
+        return $this->period;
+    }
+
+        /**
      * Set customer
      *
      * @param \NRtworks\SubscriptionBundle\Entity\Customer $customer
@@ -171,20 +221,39 @@
     }
     
     public function getFieldsParameters()
-    {
+    {       
         $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
-        $info[1] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
-        $info[2] = array("fieldName"=>"description","toDo"=>"edit","editType"=>"text","options"=>array(0=>array("value"=>"DR","text"=>"DR"),1=>array("value"=>"CR","text"=>"CR")));
+        $info[1] = array("fieldName"=>"number","toDo"=>"show","editType"=>"text","options"=>"none");
+        $info[2] = array("fieldName"=>"fiscalYear","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[3] = array("fieldName"=>"version","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[4] = array("fieldName"=>"cycle","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Cycle","fieldFilter"=>"no","selectFields"=>array("id","name")));
+        $info[5] = array("fieldName"=>"period","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Period","fieldFilter"=>"no","selectFields"=>array("id","name")));        
         return $info;
     }
     
+     public function arrayalizeForTreeFlatView()
+    {
+        return array(
+            'id' =>  $this->id,
+            'number' => $this->number,
+            'fiscalYear'=>$this->fiscalYear,
+            'version' => $this->version,
+            'cycle' => $this->cycle->getId(),
+            'period' => $this->period->getId(),
+            
+        );
+    }
     
     public function jsonSerialize()
     {
         return array(
             'id' =>  $this->id,
-            'name' => $this->name,
-            'description' => $this->description
+            'number' => $this->number,
+            'fiscalYear'=>$this->fiscalYear,
+            'version' => $this->version,
+            'cycle' => $this->cycle->jsonSerialize(),
+            'period' => $this->period->jsonSerialize(),
+            
         );
     }
   

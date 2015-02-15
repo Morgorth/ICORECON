@@ -72,6 +72,16 @@ class icousers extends User
     {
         return $this->customer=$x;
     } 
+    
+     public function jsonSerialize()
+    {
+        return array(
+            'id' =>  $this->id,
+            'username' => $this->username,
+            'email'=>$this->email,
+            'type' => $this->type            
+        );
+    }
         
     
 }

@@ -168,11 +168,15 @@ FlatView.controller('flatViewHome',['reUsableData','dataService','$scope','$filt
     //the following function is used to build a select element
     $scope.selectElement = function(element,index) {
         var selected = [];
+        console.log(element);
+        //console.log($scope.fieldsParameters[index]["options"]);
         if(element) {
-          selected = $filter('filter')($scope.fieldsParameters[index]["options"],{value: element});
-          if(typeof selected == 'array'){return selected[0].text;}else{return "Not set"}
+            
+          selected = $filter('filter')($scope.fieldsParameters[index]["options"],{"value" :element});
+          //if(typeof selected == 'array'){return selected[0].text;}else{return "Not set"}
         }
-        return "not set";
+        return selected.length ? selected[0].text : 'Not set';
+        
     };
  
     $scope.addNewElement = function()
@@ -180,7 +184,7 @@ FlatView.controller('flatViewHome',['reUsableData','dataService','$scope','$filt
         var topush  = NRtworksUtilsFunctions.cloneObject($scope.defaultObject);
         $scope.data.push(topush);
         
-        console.log($scope.data);
+        console.log("add new: " + $scope.data);
     }
  
     $scope.removeElement = function (index,element)

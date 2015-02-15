@@ -56,7 +56,7 @@ class FlatViewController extends Controller
     
     public function getDataAction(Request $request)
     {
-        $API = $this->get('GlobalUtilsFunctions.APIGetData');
+        $API = $this->get('GlobalUtilsFunctions_APIGetData');
         $serializer = $this->get('jms_serializer'); 
         $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
         $treeBuilder = $this->get('TreeView.treeBuilder');
@@ -74,14 +74,17 @@ class FlatViewController extends Controller
         
         //let's get all the data to be passed to the front
         $elementList = $API->requestSimpleByArray("BusinessDimension",$dimension,$array);
-        $elementsAsArray = $treeBuilder->rebuildObjectsAsArrays($elementList);
+        $elementsAsArray = $arrayFunctions->rebuildObjectsAsArraysForTreeFlatView($elementList);
         $finalarray = $arrayFunctions->rebuildANonAssociativeArray($elementsAsArray);
         
-        $defaultTrueObject = $setUpForDimension->getDefaultTrueObject($dimension,end($finalarray)[0]+1);
+        $defaultTrueObject = $setUpForDimension->getDefaultTrueObject($dimension,end($finalarray)[0]+1,end($finalarray)[0]+1);
         $fieldParameters = $defaultTrueObject->getFieldsParameters();
         $defaultObject = $arrayFunctions->rebuildANonAssociativeArray($defaultTrueObject->getDefaultObject());
         $nbFields = count($fieldParameters);
         //\Doctrine\Common\Util\Debug::dump($elementsAsArray);
+        
+        //we need to transform the fieldParameters to put inside the right data for the select arrays
+        $fieldParameters = $setUpForDimension->buildSelectElements($dimension,$fieldParameters,$customer);
         
         $parametersArray = [];
         $parametersArray["dimension"]= $dimension;
@@ -100,7 +103,7 @@ class FlatViewController extends Controller
     {
 
         $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
-        $API = $this->get('GlobalUtilsFunctions.APIGetData');
+        $API = $this->get('GlobalUtilsFunctions_APIGetData');
         $serializer = $this->get('jms_serializer'); 
         
         //let's get the posted data
@@ -118,7 +121,7 @@ class FlatViewController extends Controller
         
         //let's get the list of objects 
         $elementList = $API->requestSimpleByArray("BusinessDimension",$dimension,$array);
-        $fieldsParameters = $elementList[0]->getFieldsParameters();
+        $fieldsParameters = $defaultTrueObject = $setUpForDimension->getDefaultTrueObject($dimension)->getFieldsParameters();
         $nbFields = count($fieldsParameters);
         $results = $setUpForDimension->saveResultsFromFlatView($data,$elementList,$dimension,$nbFields,$customer);
         

@@ -30,7 +30,7 @@ class GlobalUtilsFunctionsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
             $validator = $this->get('validator');
-            $API = $this->get('GlobalUtilsFunctions.APIGetData');
+            $API = $this->get('GlobalUtilsFunctions_APIGetData');
             //identifying user & customer
             $user = $this->getUser();
             $customer = new Customer();

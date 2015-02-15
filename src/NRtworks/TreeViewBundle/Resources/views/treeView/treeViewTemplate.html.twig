@@ -15,7 +15,7 @@
                 <div ui-tree-handle class="tree-node tree-node-content" ng-dblclick="node.id+1">
                     <a class="" data-nodrag ng-click="toggle(this)"><i class="NRtworks_treeView_leftFolderMarkerContainer" ng-class="{'fa fa-folder-o': collapsed && node.nodes.length>0, 'fa fa-folder-open-o': !collapsed && node.nodes.length>0,'fa fa-angle-right': !node.nodes.length>0}"></i></a>
                     <span ng-Class="{'NRtworks_treeEditing_elementToBeDeleted':node.to_delete.length>0,'NRtworks_treeEditing_newElement':user.id=='new'}">
-                    [{{node.code}}: {{node.id}}] {{node.name}}  {{ node.country }}
+                    [{{node.code}}: {{node.id}}] {{node.name}}
                     </span>
                     <a class="pull-right btn btn-xs" data-nodrag ng-click="removeElement(this,node)" ng-Class="{'btn-danger':node.to_delete!='yes','btn-success':node.to_delete=='yes'}"><span class="glyphicon glyphicon-remove" ng-if="node.to_delete !='yes'"></span><span class="glyphicon glyphicon-ok" ng-if="node.to_delete =='yes'"></span></a>
                     <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>

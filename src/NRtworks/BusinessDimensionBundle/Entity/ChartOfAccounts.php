@@ -61,7 +61,7 @@
     public function __construct($id = NULL)
     {
         //the basic constructor is set to create a default object as we want it when creating a new one
-        $this->$accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->id = $id;
         $this->name = "New chart of accounts";
         $this->description = "New chart of accounts";
@@ -174,10 +174,18 @@
     {
         $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
         $info[1] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
-        $info[2] = array("fieldName"=>"description","toDo"=>"edit","editType"=>"text","options"=>array(0=>array("value"=>"DR","text"=>"DR"),1=>array("value"=>"CR","text"=>"CR")));
+        $info[2] = array("fieldName"=>"description","toDo"=>"edit","editType"=>"text","options"=>"none");
         return $info;
     }
     
+    public function arrayalizeForTreeFlatView()
+    {
+        return array(
+            'id' =>  $this->id,
+            'name' => $this->name,
+            'description' => $this->description
+        );        
+    }
     
     public function jsonSerialize()
     {

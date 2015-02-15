@@ -123,10 +123,10 @@ services:
     # this one is the service that returns objects of the business dimension, update an existing one etc     
    BusinessDimension.setUpForDimension:
      class: NRtworks\BusinessDimensionBundle\Model\setUpForDimension
-     arguments: ['@doctrine.orm.entity_manager',@arrayFunctions]
+     arguments: ['@doctrine.orm.entity_manager',@arrayFunctions,@GlobalUtilsFunctions_APIGetData]
      
     # this one is the API used to return result from the database gievn parameters
-   GlobalUtilsFunctions.APIGetData:
+   GlobalUtilsFunctions_APIGetData:
      class: NRtworks\GlobalUtilsFunctionsBundle\Services\APIGetData
      arguments: ['@doctrine.orm.entity_manager']
      
