@@ -166,15 +166,15 @@
             return $this->code;
         }
         
-        public function setParent(BusinessUnit $parent=null)
-        {
-            $this->parent = $parent;
-        }
+    public function setParent(BusinessUnit $parent)
+    {
+        $this->parent = $parent;
+    }
 
-        public function getParent()
-        {
-            return $this->parent;
-        }
+    public function getParent()
+    {
+        return $this->parent;
+    }
 
    
     /**
@@ -241,7 +241,7 @@
     /**
      * Set manager
      */
-    public function setManager(\NRtworks\SubscriptionBundle\Entity\Manager $manager = null)
+    public function setManager(\NRtworks\SubscriptionBundle\Entity\icousers $manager = null)
     {
         $this->manager = $manager;
     }
@@ -257,7 +257,7 @@
     /**
      * Set substitute
      */
-    public function setSubstitute(\NRtworks\SubscriptionBundle\Entity\Substitute $substitute = null)
+    public function setSubstitute(\NRtworks\SubscriptionBundle\Entity\icousers $substitute = null)
     {
         $this->substitute = $substitute;
     }
@@ -273,7 +273,7 @@
     /**
      * Set controller
      */
-    public function setController(\NRtworks\SubscriptionBundle\Entity\Controller $controller = null)
+    public function setController(\NRtworks\SubscriptionBundle\Entity\icousers $controller = null)
     {
         $this->controller = $controller;
     }
@@ -324,9 +324,9 @@
         $info[4] = array("fieldName"=>"root","toDo"=>"noShow","editType"=>"select","options"=>"none");
         $info[5] = array("fieldName"=>"parentid","toDo"=>"noShow","editType"=>"select","options"=>"none");        
         $info[6] = array("fieldName"=>"nodes","toDo"=>"noShow","editType"=>"select","options"=>"none");        
-        $info[7] = array("fieldName"=>"manager","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>"no","selectFields"=>array("id","username")));        
-        $info[8] = array("fieldName"=>"substitute","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>"no","selectFields"=>array("id","username")));        
-        $info[9] = array("fieldName"=>"controller","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
+        $info[7] = array("fieldName"=>"manager","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
+        $info[8] = array("fieldName"=>"substitute","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
+        $info[9] = array("fieldName"=>"controller","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1","type"=>array("value"=>3,"operator"=>">=")),"orderBy"=>"type","selectFields"=>array("id","username")));        
         return $info;
     }
     

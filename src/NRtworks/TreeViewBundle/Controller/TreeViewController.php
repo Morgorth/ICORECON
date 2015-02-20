@@ -390,7 +390,7 @@ class TreeViewController extends Controller
                     //echo "foreach start:";
                     //echo $element["name"];
                     $currentObject = $originalFlatTree[$arrayFunctions->findIndexOfAPropertyByIdInArrayOfObject($originalFlatTree,$element["id"])];
-                    //echo $currentObject->getName();
+                    
                     //and let's get the object of its parent (as it was modified in the front, not in the DB)
                     $newParent = $originalFlatTree[$arrayFunctions->findIndexOfAPropertyByIdInArrayOfObject($originalFlatTree,$element["parentid"])];
 
@@ -425,6 +425,7 @@ class TreeViewController extends Controller
                     }
 
                     //let's check if the account was moved and then move it
+                    //\Doctrine\Common\Util\Debug::dump($currentObject);
                     //echo $currentObject->getName();
                     //echo $newParent->getName();
                     if($currentObject->getParent()->getId() != $newParent->getId())

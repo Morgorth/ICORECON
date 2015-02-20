@@ -50,6 +50,29 @@ class APIGetData extends \Symfony\Component\DependencyInjection\ContainerAware{
         }
     }
     
+    public function buildWhereClause($whereArray)
+    {
+        $where = "";
+        $i = 0;
+        //\Doctrine\Common\Util\Debug::dump($whereArray);
+        foreach($whereArray as $key=>$value)
+        {
+            
+            if($i != 0){$where = $where.' AND ';}
+            if(is_array($value))
+            {
+                $where = $where . 'e.'.$key.' '.$value["operator"].' \''.$value["value"].'\'';
+            }
+            else
+            {
+                $where = $where . 'e.'.$key.' = \''.$value.'\'';
+            }
+            $i++;
+            //echo $where;
+        }
+        
+        return $where;
+    }
     
     public function requestSimpleByArray($bundle,$dimension,$array)
     {
@@ -71,6 +94,27 @@ class APIGetData extends \Symfony\Component\DependencyInjection\ContainerAware{
         $result = $repo->find($id);
         //\Doctrine\Common\Util\Debug::dump($result);
         return $result;        
+    }
+           
+    public function requestQuery($bundle,$dimension,$whereArray,$orderBy = "id",$order = "ASC")
+    {
+       $repo = $this->getRepository($bundle,$dimension);
+       
+       $whereClause = $this->buildWhereClause($whereArray);
+
+        $query = $this->em->createQuery(
+            'SELECT e
+            FROM NRtworks'.$bundle.'Bundle:'.$dimension.' e
+            WHERE '.$whereClause.'
+            ORDER BY e.'.$orderBy.' '.$order.''
+        );
+        //\Doctrine\Common\Util\Debug::dump($query);              
+       return $result = $query->getResult();
+    }
+    
+    public function requestBySQLQuery($bundle,$dimension,$field,$value,$operator,$orderBy = "id",$order = "ASC")
+    {
+        
     }
 
     

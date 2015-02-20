@@ -141,20 +141,20 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                         }
                         else 
                         {
-                            $whereArray["customer"] = $customer;
+                            $whereArray["customer"] = $customer->getId();
                         }
                         
                         if(is_array($field["options"]["fieldFilter"]))
                         {
                             foreach($field["options"]["fieldFilter"] as $key=>$value)
-                            {
+                            {                                
                                 $whereArray[$key] = $value;
                             }                            
                         }
                         //\Doctrine\Common\Util\Debug::dump($whereArray);
                         if(isset($whereArray))
                         {
-                            $elementList = $this->API->requestSimpleByArray($this->API->whichBundle($remoteDimension),$remoteDimension,$whereArray);
+                            $elementList = $this->API->requestQuery($this->API->whichBundle($remoteDimension),$remoteDimension,$whereArray);
                         }
                         else
                         {
@@ -200,12 +200,19 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                             }
                             break;
                         case "Account":
-                            
+                            if($field["fieldName"] == "sense")
+                            {
+                                $field["options"] = array(0=>array("value"=>"DR","text"=>"Debit"),1=>array("value"=>"CR","text"=>"Credit"));
+                            }
+                            else
+                            {
+                                $field["options"] = array("value"=>"throwError","text"=>"an error has occured");
+                            }
                             break;
                         case "BusinessUnit":
                             if($field["fieldName"] == "country")
                             {
-                                $field["options"] = array("value"=>"FR","text"=>"France");
+                                $field["options"] = array(0=>array("value"=>"FR","text"=>"France"));
                             }
                             else
                             {
@@ -347,8 +354,8 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $newObject->setNumber($element[1]);
                 $newObject->setFiscalYear($element[2]);
                 $newObject->setVersion($element[3]);
-                $newObject->setCycle($this->API->requestById("BusinessDimension","Cycle",$element[4]));
-                $newObject->setPeriod($this->API->requestById("BusinessDimension","Period",$element[5]));
+                $newObject->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[4]));
+                $newObject->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[5]));
                 
                 return $newObject;
             }            
@@ -384,8 +391,18 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $object->setNumber($element[1]);
                 $object->setFiscalYear($element[2]);
                 $object->setVersion($element[3]);
-                $object->setCycle($this->API->requestById("BusinessDimension","Cycle",$element[4]));
-                $object->setPeriod($this->API->requestById("BusinessDimension","Period",$element[5]));
+                $object->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[4]));
+                $object->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[5]));
+                return $object;
+            }
+            if($dimension == "BusinessUnit")
+            {
+                $object->setName($element["name"]);
+                $object->setCode($element["code"]);
+                $object->setCountry($element["country"]);
+                $object->setManager($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["manager"]));
+                $object->setSubstitute($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["substitute"]));
+                $object->setController($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["controller"]));
                 return $object;
             }
         }

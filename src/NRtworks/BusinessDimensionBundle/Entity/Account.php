@@ -103,31 +103,6 @@
         return $result;
     }
     
-    //this method returns the list of the field's name to be edited in the tree editing
-    public function fieldsToEditinTreeEdit()
-    {
-        $toEdit[0] = array(0=>"id",1=>0,2=>"text");
-        $toEdit[1] = array(0=>"name",1=>1,2=>"text");
-        $toEdit[2] = array(0=>"code",1=>1,2=>"text");
-        $toEdit[3] = array(0=>"sense",1=>1,2=>"select",3=>array(0=>array("value"=>"DR","text"=>"DR"),1=>array("value"=>"CR","text"=>"CR")));        
-        $toEdit[4] = array(0=>"root",1=>0,2=>"text");
-        $toEdit[5] = array(0=>"nodes",1=>0,2=>"text");                
-        return $toEdit;
-    }
-    
-    public function arrayalizeForFront()
-    {
-        return array(
-            'id' =>  $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'sense' =>$this->sense,
-            'nodes'=> [],
-            'parentid'=> $this->parent,
-            'root'=>$this->root
-        );
-    }    
-
     /**
      * Get id
      */
@@ -263,6 +238,44 @@
     {
         return $this->chartofaccount;
     }
+
+    //this method returns the list of the field's name to be edited in the tree editing
+    public function fieldsToEditinTreeEdit()
+    {
+        $toEdit[0] = array(0=>"id",1=>0,2=>"text");
+        $toEdit[1] = array(0=>"name",1=>1,2=>"text");
+        $toEdit[2] = array(0=>"code",1=>1,2=>"text");
+        $toEdit[3] = array(0=>"sense",1=>1,2=>"select",3=>array(0=>array("value"=>"DR","text"=>"DR"),1=>array("value"=>"CR","text"=>"CR")));        
+        $toEdit[4] = array(0=>"root",1=>0,2=>"text");
+        $toEdit[5] = array(0=>"nodes",1=>0,2=>"text");                
+        return $toEdit;
+    }  
+    
+    public function getFieldsParameters()
+    {       
+        $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
+        $info[1] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
+        $info[2] = array("fieldName"=>"code","toDo"=>"edit","editType"=>"text","options"=>"none");
+        $info[3] = array("fieldName"=>"sense","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[4] = array("fieldName"=>"root","toDo"=>"noShow","editType"=>"select","options"=>"none");
+        $info[5] = array("fieldName"=>"nodes","toDo"=>"noShow","editType"=>"select","options"=>"none");        
+        $info[6] = array("fieldName"=>"parentid","toDo"=>"noShow","editType"=>"select","options"=>"none");        
+        return $info;
+    }    
+   
+    public function arrayalizeForTreeFlatView()
+    {
+        return array(
+            'id' =>  $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'sense' =>$this->sense,
+            'root'=>$this->root,
+            'nodes'=> [],
+            'parentid'=> $this->parent,
+            
+        );
+    }       
     
     public function jsonSerialize()
     {
@@ -277,7 +290,8 @@
         );
     }
     
-    // ALL METHODS BELOW ARE OPTIONS FOR THE TREE EDITING 
+     
+ 
         
 }
 ?>
