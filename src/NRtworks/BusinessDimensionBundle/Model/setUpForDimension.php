@@ -116,7 +116,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
         return $result;
     }    
     
-    //the following function is build an array for a "select" element to be passed to the front
+    //the following function is building an array for a "select" element to be passed to the front
     public function buildSelectElements($dimension,$fieldParameters,$customer)
     {
         foreach($fieldParameters as &$field)
@@ -128,21 +128,22 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 {
                     $remoteDimension = $field["options"]["remote"];
                     //here means that the field is remote so we need to request the data given some parameters
-                    if(in_array($field["options"]["remote"],$this->remotePossible))
-                    {
-                        
+                    if(in_array($remoteDimension,$this->remotePossible))
+                    {                        
                         if($remoteDimension == "Account")
                         {
                             $whereArray["chartofaccount"] = 1;
                         }
-                        elseif($remoteDimension == "Cycle" || $remoteDimension == "Version" || $remoteDimension == "Period" || $remoteDimension == "FiscalYear")
+                        elseif($remoteDimension == "Cycle" || $remoteDimension == "Version" || $remoteDimension == "Period" || $remoteDimension == "FiscalYear" || $remoteDimension == "Currency")
                         {
                             // no need for generic selector here
+
                         }
                         else 
                         {
                             $whereArray["customer"] = $customer->getId();
                         }
+                        
                         
                         if(is_array($field["options"]["fieldFilter"]))
                         {
@@ -160,6 +161,8 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                         {
                             $elementList = $this->API->requestAll($this->API->whichBundle($remoteDimension),$remoteDimension);
                         }
+                        
+                        unset($whereArray);
                         
                         //\Doctrine\Common\Util\Debug::dump($elementList);
                         $elementsAsArray = $this->arrayFunctions->rebuildObjectsAsArrays($elementList);
@@ -329,12 +332,19 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 
             }
             if($dimension == "BusinessUnit")
-            {
-                $address = $this->getAddress($dimension);                  
-                $newObject = new $address();
-                $newObject->fillWithArray($element);
-                $newObject->setCustomer($customer);
+            {               
+                $newObject = $this->getObject($dimension);
                 $newObject->setParent($parent);
+                $newObject->setCustomer($customer);
+                
+                $newObject->setName($element["name"]);
+                $newObject->setCode($element["code"]);
+                $newObject->setCountry($element["country"]);     
+
+                $newObject->setManager($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["manager"]));
+                $newObject->setSubstitute($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["substitute"]));
+                $newObject->setController($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["controller"]));
+                $newObject->setBusinessCurrency($this->API->requestById($this->API->whichBundle("Currency"),"Currency",$element["businessCurrency"]));                
                 return $newObject;
             }
             if($dimension == "ChartOfAccounts")
@@ -356,6 +366,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $newObject->setVersion($element[3]);
                 $newObject->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[4]));
                 $newObject->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[5]));
+                
                 
                 return $newObject;
             }            
@@ -403,6 +414,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $object->setManager($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["manager"]));
                 $object->setSubstitute($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["substitute"]));
                 $object->setController($this->API->requestById($this->API->whichBundle("icousers"),"icousers",$element["controller"]));
+                $object->setBusinessCurrency($this->API->requestById($this->API->whichBundle("Currency"),"Currency",$element["businessCurrency"]));
                 return $object;
             }
         }
@@ -459,9 +471,10 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 {
                     $object = $elementList[$this->arrayFunctions->findIndexOfAPropertyByIdInArrayOfObject($elementList,$element[0])];
                     $updatedObject = $this->updateAnObject($object,$element,$dimension);
+                    //\Doctrine\Common\Util\Debug::dump($updatedObject);
                     if($object != $updatedObject)
                     {
-                        $this->em->persist($updatedObject);
+                        $this->em->merge($updatedObject);
                         array_push($updatedLines,$element);
                     }                    
                 } 

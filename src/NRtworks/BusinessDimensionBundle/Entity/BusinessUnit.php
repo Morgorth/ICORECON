@@ -72,7 +72,12 @@
     /**
      * @ORM\ManyToOne(targetEntity="NRtworks\SubscriptionBundle\Entity\icousers")     
      **/
-    private $controller;    
+    private $controller;   
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="NRtworks\BusinessDimensionBundle\Entity\Currency")     
+     **/
+    private $businessCurrency;      
     
     
     /**
@@ -87,13 +92,17 @@
     public function __construct($id = NULL)
     {
         //the basic constructor is set to create a default object as we want it when creating a new one
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        
         $this->id = $id;
         $this->name = "New Entity";
         $this->code = "xxxxxx";
         $this->country = "";
         $this->root = 0;
-        
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->manager = "not set";
+        $this->substitute = "not set";
+        $this->controller = "not set";
+        $this->businessCurrency = "not set";      
 
     }    
     
@@ -116,8 +125,16 @@
         $result['name'] = $this->name;
         $result['code'] = $this->code;
         $result['country'] = "";
-        $result["action"] = "new";
+        $result['root'] = 0;
+        $result['parentid'] = 0;
         $result["nodes"] = [];
+        $result["manager"] = "not set";
+        $result["substitute"] = "not set";
+        $result["controller"] = "not set";
+        $result["businessCurrency"] = "not set";
+        
+        $result["action"] = "new";
+
         return $result;
     }
         
@@ -182,7 +199,7 @@
      */
     public function setCountry($country)
     {
-        $this->sense = $country;
+        $this->country = $country;
     }
 
     /**
@@ -285,6 +302,22 @@
     {
         return $this->controller;
     }        
+
+    /**
+     * Set businessCurrency
+     */
+    public function setBusinessCurrency(\NRtworks\BusinessDimensionBundle\Entity\Currency $businessCurrency = null)
+    {
+        $this->businessCurrency = $businessCurrency;
+    }
+
+    /**
+     * Get businessCurrency
+     */
+    public function getBusinessCurrency()
+    {
+        return $this->businessCurrency;
+    }   
     
     /**
      * Set customer
@@ -327,6 +360,7 @@
         $info[7] = array("fieldName"=>"manager","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
         $info[8] = array("fieldName"=>"substitute","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1"),"selectFields"=>array("id","username")));        
         $info[9] = array("fieldName"=>"controller","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"icousers","fieldFilter"=>array("enabled"=>"1","type"=>array("value"=>3,"operator"=>">=")),"orderBy"=>"type","selectFields"=>array("id","username")));        
+        $info[10] = array("fieldName"=>"businessCurrency","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Currency","fieldFilter"=>"no","selectFields"=>array("id","name")));        
         return $info;
     }
     
@@ -335,6 +369,7 @@
         if(is_object($this->getManager())){$manager = $this->getManager()->getId();}else{$manager = "Not set";}
         if(is_object($this->getSubstitute())){$substitute = $this->getSubstitute()->getId();}else{$substitute = "Not set";}
         if(is_object($this->getController())){$controller = $this->getController()->getId();}else{$controller = "Not set";}
+        if(is_object($this->getBusinessCurrency())){$businessCurrency = $this->getBusinessCurrency()->getId();}else{$businessCurrency = "Not set";}
         return array(
             'id' =>  $this->id,
             'name' => $this->name,
@@ -346,6 +381,7 @@
             'manager'=> $manager,
             'substitute'=>$substitute,
             'controller'=>$controller,
+            'businessCurrency'=>$businessCurrency
             
         );
     } 

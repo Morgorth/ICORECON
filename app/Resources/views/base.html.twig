@@ -115,12 +115,13 @@
                 <li><a href="{{ path('_start') }}">Subscription</a></li>
                 <li><a href="{{ path('_UserManager') }}">User Manager</a></li>
                 <br/>
+                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Currency'}) }}">Currencies</a></li>
                 <br/>Dimension Management
                 <li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'ChartOfAccounts'}) }}">Chart of Accounts</a></li>
                 <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'Account'}) }}">Accounts</a></li>
                 <br/>
-                <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'BusinessUnit'}) }}">Entity</a></li>
-                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Campaign'}) }}">Campaign</a></li>
+                <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'BusinessUnit'}) }}">Business Units</a></li>
+                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Campaign'}) }}">Campaigns</a></li>
                 
             </ul>
             {% endblock %}

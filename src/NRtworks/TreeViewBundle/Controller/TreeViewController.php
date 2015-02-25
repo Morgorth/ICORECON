@@ -377,7 +377,7 @@ class TreeViewController extends Controller
                 }                
             }
             unset($element);
-            
+            //\Doctrine\Common\Util\Debug::dump($originalFlatTree);
     
             //STEP 2:  ok let's check the accounts we have to do
             foreach($resultFlatTree as $element)
@@ -388,7 +388,7 @@ class TreeViewController extends Controller
                 {
                     //let's get the object equivalent to the element
                     //echo "foreach start:";
-                    //echo $element["name"];
+                    //echo $element["id"];
                     $currentObject = $originalFlatTree[$arrayFunctions->findIndexOfAPropertyByIdInArrayOfObject($originalFlatTree,$element["id"])];
                     
                     //and let's get the object of its parent (as it was modified in the front, not in the DB)
@@ -439,6 +439,7 @@ class TreeViewController extends Controller
                     {
                         if($element["name"] == "throwError"){ throw new \Exception;}
                         $em->merge($currentObject);
+                        array_push($updated_lines,$element);
                     }
                     catch(\Exception $e)
                     {
