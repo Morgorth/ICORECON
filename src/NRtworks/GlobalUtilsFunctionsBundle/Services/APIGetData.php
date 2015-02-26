@@ -16,7 +16,7 @@ class APIGetData extends \Symfony\Component\DependencyInjection\ContainerAware{
     {
         $this->em = $em;
         $this->error = "Unidentified error";
-        $this->BusinessDimension = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","Campaign");
+        $this->BusinessDimension = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","CurrencyValuation","Campaign");
         $this->Subscription = array("Usertype","icousers","Customer");
     } 
     

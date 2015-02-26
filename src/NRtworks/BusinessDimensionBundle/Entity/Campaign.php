@@ -35,10 +35,22 @@
    
     protected $number;  
     
+    /**
+     * @ORM\Column(type="string", length=25)
+     */
+   
+    protected $name; 
+
+    /**
+     * @ORM\Column(type="string", length=25)
+     */
+   
+    protected $status;     
     
     /**
      * @ORM\Column(type="integer", length=4)     
      **/
+
     
     private $fiscalYear;    
 
@@ -74,6 +86,8 @@
     {
         $this->id = $id;
         $this->number = $number;
+        $this->name = "New campaign";
+        $this->status = "not started";
         $this->fiscalYear = "2015";
         $this->version ="1";
         $this->cycle = "Actuals";
@@ -88,6 +102,8 @@
         $result = Array();
         $result['id'] = $this->id;
         $result['number'] = $this->number;
+        $result['name'] = $this->name;
+        $result['status'] = $this->status;
         $result['fiscalYear'] = $this->fiscalYear;
         $result['version'] = $this->version;
         $result['cycle'] = $this->cycle;
@@ -136,6 +152,37 @@
         return $this->number;
     }    
 
+    /**
+     * Set name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get name
+     */
+    public function getName()
+    {
+        return $this->name;
+    } 
+
+    /**
+     * Set status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * Get status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }     
     
      /**
      * set fiscalYear
@@ -224,10 +271,12 @@
     {       
         $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
         $info[1] = array("fieldName"=>"number","toDo"=>"show","editType"=>"text","options"=>"none");
-        $info[2] = array("fieldName"=>"fiscalYear","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
-        $info[3] = array("fieldName"=>"version","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
-        $info[4] = array("fieldName"=>"cycle","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Cycle","fieldFilter"=>"no","selectFields"=>array("id","name")));
-        $info[5] = array("fieldName"=>"period","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Period","fieldFilter"=>"no","selectFields"=>array("id","name")));        
+        $info[2] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
+        $info[3] = array("fieldName"=>"status","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[4] = array("fieldName"=>"fiscalYear","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[5] = array("fieldName"=>"version","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"no","fieldFilter"=>"no"));
+        $info[6] = array("fieldName"=>"cycle","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Cycle","fieldFilter"=>"no","selectFields"=>array("id","name")));
+        $info[7] = array("fieldName"=>"period","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Period","fieldFilter"=>"no","selectFields"=>array("id","name")));        
         return $info;
     }
     
@@ -236,6 +285,8 @@
         return array(
             'id' =>  $this->id,
             'number' => $this->number,
+            'name' => $this->name,
+            'status' => $this->status,
             'fiscalYear'=>$this->fiscalYear,
             'version' => $this->version,
             'cycle' => $this->cycle->getId(),
@@ -249,6 +300,8 @@
         return array(
             'id' =>  $this->id,
             'number' => $this->number,
+            'name' => $this->name,
+            'status' => $this->status,
             'fiscalYear'=>$this->fiscalYear,
             'version' => $this->version,
             'cycle' => $this->cycle->jsonSerialize(),

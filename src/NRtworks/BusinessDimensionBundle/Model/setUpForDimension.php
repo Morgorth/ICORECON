@@ -20,7 +20,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
         $this->em = $em;
         $this->arrayFunctions = $arrayFunctions;
         $this->API = $API;
-        $this->possible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","Campaign");
+        $this->possible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","CurrencyValuation","Campaign");
         $this->remotePossible = array("ChartOfAccounts","Account","BusinessUnit","FiscalYear","Period","Version","Cycle","Currency","Campaign","icousers","Usertype");
         $this->noexist = "Unauthorized dimension";
     } 
@@ -197,6 +197,10 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                             {
                                 $field["options"] = $this->getVersionList("selectArray");
                             }
+                            elseif($field["fieldName"] == "status")
+                            {
+                                $return = array(0=>["value"=>"not started","text"=>"not started"],1=>["value"=>"in progress","text"=>"in progress"],2=>["value"=>"closed","text"=>"closed"]);
+                            }
                             else
                             {
                                 $field["options"] = array("value"=>"throwError","text"=>"an error has occured");
@@ -362,10 +366,12 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $newObject = new $address();
                 $newObject->setCustomer($customer);
                 $newObject->setNumber($element[1]);
-                $newObject->setFiscalYear($element[2]);
-                $newObject->setVersion($element[3]);
-                $newObject->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[4]));
-                $newObject->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[5]));
+                $newObject->setName($element[2]);
+                $newObject->setStatus($element[3]);
+                $newObject->setFiscalYear($element[4]);
+                $newObject->setVersion($element[5]);
+                $newObject->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[6]));
+                $newObject->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[7]));
                 
                 
                 return $newObject;
@@ -400,10 +406,12 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
             if($dimension == "Campaign")
             {
                 $object->setNumber($element[1]);
-                $object->setFiscalYear($element[2]);
-                $object->setVersion($element[3]);
-                $object->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[4]));
-                $object->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[5]));
+                $object->setName($element[2]);
+                $object->setStatus($element[3]);
+                $object->setFiscalYear($element[4]);
+                $object->setVersion($element[5]);
+                $object->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[6]));
+                $object->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[7]));
                 return $object;
             }
             if($dimension == "BusinessUnit")
