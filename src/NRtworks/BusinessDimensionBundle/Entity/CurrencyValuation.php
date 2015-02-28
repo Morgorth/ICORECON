@@ -172,7 +172,7 @@
     {       
         $info[0] = array("fieldName"=>"id","toDo"=>"noShow","editType"=>"text","options"=>"none");
         $info[1] = array("fieldName"=>"value","toDo"=>"edit","editType"=>"text","options"=>"none");
-        $info[2] = array("fieldName"=>"campaignAssigned","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Campaign","fieldFilter"=>"no","selectFields"=>array("id","name")));
+        $info[2] = array("fieldName"=>"campaignAssigned","toDo"=>"noShow","editType"=>"select","options"=>array("remote"=>"Campaign","fieldFilter"=>"no","selectFields"=>array("id","name")));
         $info[3] = array("fieldName"=>"currencyNumerator","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Currency","fieldFilter"=>"no","selectFields"=>array("id","name")));
         $info[4] = array("fieldName"=>"currencyDenominator","toDo"=>"edit","editType"=>"select","options"=>array("remote"=>"Currency","fieldFilter"=>"no","selectFields"=>array("id","name")));
         
@@ -183,11 +183,9 @@
     {
         return array(
             'id' =>  $this->id,
-            'number' => $this->number,
-            'fiscalYear'=>$this->fiscalYear,
-            'version' => $this->version,
-            'cycle' => $this->cycle->getId(),
-            'period' => $this->period->getId(),
+            'value' => $this->value,
+            'currencyNumerator'=>$this->currencyNumerator,
+            'currencyDenominator' => $this->currencyDenominator,
             
         );
     }
@@ -196,11 +194,10 @@
     {
         return array(
             'id' =>  $this->id,
-            'number' => $this->number,
-            'fiscalYear'=>$this->fiscalYear,
-            'version' => $this->version,
-            'cycle' => $this->cycle->jsonSerialize(),
-            'period' => $this->period->jsonSerialize(),
+            'value' => $this->value,
+            'campaignAssigned' => $this->campaignAssigned,
+            'currencyNumerator'=>$this->currencyNumerator,
+            'currencyDenominator' => $this->currencyDenominator,
             
         );
     }

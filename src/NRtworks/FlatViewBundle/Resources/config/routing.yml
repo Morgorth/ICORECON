@@ -3,19 +3,26 @@
         
   ## Home route
 _NRtworks_FlatView_Home:
-    pattern:  /Management/FlatView/{dimension}
+    pattern:  /AccountManagement/dimension/{dimension}
     defaults: { _controller: NRtworksFlatViewBundle:FlatView:home } 
     
   ## main template
 _NRtworks_FlatView_elementList:
-  pattern:  /Management/angTemplate/FlatView/elementList
+  pattern:  /AccountManagement/FlatView/elementList
   defaults: { _controller: NRtworksFlatViewBundle:FlatView:elementList }   
   options:
     expose: true    
     
+  ## main template
+_NRtworks_FlatView_DiscrimSelector:
+  pattern:  /AccountManagement/FlatView/DiscrimSelector
+  defaults: { _controller: NRtworksFlatViewBundle:FlatView:discrimSelector }   
+  options:
+    expose: true        
+    
    ## RESTful API routes     
 _NRtworks_FlatView_API_getData:
-  pattern: /FlatView/_API_getData
+  pattern: /AccountManagement/FlatView/_API_getData
   defaults:  {_controller: NRtworksFlatViewBundle:FlatView:getData}
   requirements:
     _method: POST
@@ -23,7 +30,7 @@ _NRtworks_FlatView_API_getData:
     expose: true
     
 _NRtworks_FlatView_API_saveData:
-  pattern: /FlatView/_API_saveData
+  pattern: /AccountManagement/FlatView/_API_saveData
   defaults:  {_controller: NRtworksFlatViewBundle:FlatView:saveData}
   requirements:
     _method: POST

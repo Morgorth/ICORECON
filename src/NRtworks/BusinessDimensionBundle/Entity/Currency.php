@@ -95,7 +95,14 @@
         $info[1] = array("fieldName"=>"name","toDo"=>"edit","editType"=>"text","options"=>"none");
         return $info;
     }
-    
+
+    public function arrayalizeForTreeFlatView()
+    {
+        return array(
+            'id' =>  $this->id,
+            'name' => $this->name,
+        );
+    }    
     
     public function jsonSerialize()
     {

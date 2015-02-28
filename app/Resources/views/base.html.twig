@@ -64,7 +64,7 @@
             <script type="text/javascript" src="{{ asset('js/xeditable.min.js') }}"></script>
             
         {% elseif SectionIdentification == "FlatView" %}
-            <script type="text/javascript">var dimension = "{{dimension}}"</script>
+            <script type="text/javascript">var dimension = "{{dimension}}";</script>
 
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
@@ -116,7 +116,7 @@
                 <li><a href="{{ path('_UserManager') }}">User Manager</a></li>
                 <br/>
                 <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Currency'}) }}">Currencies</a></li>
-                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'Currency'}) }}">Currencies Valorization</a></li>
+                <br/><li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'CurrencyValuation'}) }}">Currencies Valorization</a></li>
                 <br/>Dimension Management
                 <li><a href="{{ path('_NRtworks_FlatView_Home',{'dimension': 'ChartOfAccounts'}) }}">Chart of Accounts</a></li>
                 <li><a href="{{ path('_NRtworks_treeView_Home',{'dimension': 'Account'}) }}">Accounts</a></li>

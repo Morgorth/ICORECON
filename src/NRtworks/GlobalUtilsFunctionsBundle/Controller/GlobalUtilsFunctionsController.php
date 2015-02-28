@@ -47,7 +47,7 @@ class GlobalUtilsFunctionsController extends Controller
             
             $defaultObject = $setUpForDimension->getDefaultTrueObject($dimension);
             $defaultObject->{"set".ucfirst($fieldName)}($data);
-            if(is_Array($dimensionIdentification))
+            /*if(is_Array($dimensionIdentification))
             {
                 $array = ["customer"=>$customer];   
                 $ok = $API->requestSimpleByArray("BusinessDimension","ChartOfAccounts",$array);
@@ -57,7 +57,7 @@ class GlobalUtilsFunctionsController extends Controller
             else
             {
                 $defaultObject->setCustomer($customer);
-            }
+            }*/
             
             //\Doctrine\Common\Util\Debug::dump($defaultObject);
             
@@ -176,6 +176,57 @@ class GlobalUtilsFunctionsController extends Controller
             $res = json_encode(["propertiesConstraints"=>$propertiesConstraints,"entityConstraints"=>$entityConstraints]);                     
             return new Response($res); 
             
+        }
+    }
+    
+    //the following function set the parameters of the business dimension into a session and returns these parameters as a json response
+    public function getSetBusinessDimensionParametersAction(Request $request)
+    {
+        $session = new Session();  
+        
+        if($this->getUser())
+        {
+            //let's get the posted data
+            $allContent = $request->getContent();
+            $allContent = json_decode($allContent,true);
+            $dimension = $allContent["dimensionpassed"];
+                           
+            $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
+            $API = $this->get('GlobalUtilsFunctions_APIGetData');
+            $serializer = $this->get('jms_serializer'); 
+
+            //let's get infos on how to treat this dimension
+            $dimensionDiscrim = $setUpForDimension->getBasicDiscriminant($dimension);
+
+            $parametersArray = [];
+            $parametersArray = ["BDName"=>$dimension];
+
+            $selectorList = 0;
+            //echo $dimensionDiscrim["toSelect"][0];
+            if(is_array($dimensionDiscrim) && $dimensionDiscrim["toSelect"] != "none")
+            {
+                if(isset($dimensionDiscrim["howToSelect"]) && $dimensionDiscrim["howToSelect"] = "UserSelection")
+                {
+                    //the users need to select a specific dimension to edit on, need to get the list to pass it to a template
+                    $whereArray["customer"] = $session->get("CustomerID");
+                    $selectorList = $API->requestQuery($API->whichBundle($dimensionDiscrim["toSelect"][0]),$dimensionDiscrim["toSelect"][0],$whereArray);
+                    //$selectorList = $serializer->serialize($selectorList, 'json');
+                }
+                else
+                {
+                    //this is the easy case, the selector is defined in the model
+                    $parametersArray["BDParameters"]=["BDDiscrim"=>$dimensionDiscrim["toSelect"]];
+                }
+            }
+            else
+            {
+                $parametersArray["BDParameters"]=["BDDiscrim"=>"none"];
+            }
+
+            $session->set("BDParameters", $parametersArray);
+            //$parametersArray = json_encode($parametersArray);
+            $res = json_encode(["BDParameters"=>$parametersArray,"selectorList"=>$selectorList]);                     
+            return new Response($res); 
         }
     }
     

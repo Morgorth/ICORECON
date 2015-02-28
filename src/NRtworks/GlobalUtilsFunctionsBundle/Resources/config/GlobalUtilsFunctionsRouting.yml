@@ -19,7 +19,16 @@ _NRtworks_globalUtilsFunctions_checkInDB:
   options:
     expose: true 
   requirements:
-    _method: POST    
+    _method: POST  
+    
+    ## route to the controller that gets/sets the parameters of the business dimension
+_NRtworks_globalUtilsFunctions_getSetBDParameters:
+  pattern:  /remoteCall/GlobalUtilsFunctions/getSetBDParameters
+  defaults: { _controller: NRtworksGlobalUtilsFunctionsBundle:GlobalUtilsFunctions:getSetBusinessDimensionParameters} 
+  options:
+    expose: true 
+  requirements:
+    _method: POST       
 
         
         

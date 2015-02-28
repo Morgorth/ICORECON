@@ -27,21 +27,19 @@ class FlatViewController extends Controller
     // home controller
     public function homeAction($dimension)
     {
-       $session = new Session();   
-     
-       
-      // $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
-       
-       $parametersArray = [];
-       //$parametersArray["fields"] = $setUpForDimension->getFieldsNameToEdit($dimension);
-       $parametersArray["dimension"] = $dimension;
-       //$parametersArray["BDSelector"] = ["chartofaccount"=>1];
-       
-       $session->set("parameters", $parametersArray);
         
-       return $this->render(
-            'NRtworksFlatViewBundle:FlatView:home.html.twig',array('SectionIdentification'=>'FlatView','dimension'=>$dimension)
-        ); 
+        $session = new Session();     
+
+        //set the customer in session
+        $user = $this->getUser();
+        $customer = new Customer();
+        $customer = $user->getCustomer();
+        $session->set("CustomerID", $customer->getId());
+        
+         return $this->render(
+             'NRtworksFlatViewBundle:FlatView:home.html.twig',array('SectionIdentification'=>'FlatView','dimension'=>$dimension)
+         ); 
+        
         
     }
     
@@ -52,10 +50,21 @@ class FlatViewController extends Controller
       return $this->render(
         'NRtworksFlatViewBundle:FlatView:elementList.html.twig', array('SectionIdentification' => 'FlatView'));
         
-    }    
+    }   
+    
+    // controller that gives the address of the template to angular
+    public function discrimSelectorAction()
+    {
+  
+      return $this->render(
+        'NRtworksFlatViewBundle:FlatView:discrimSelector.html.twig', array('SectionIdentification' => 'FlatView'));
+        
+    }        
     
     public function getDataAction(Request $request)
     {
+        $session = new Session();
+        $BDParameters = $session->get("BDParameters");
         $API = $this->get('GlobalUtilsFunctions_APIGetData');
         $serializer = $this->get('jms_serializer'); 
         $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
@@ -66,14 +75,30 @@ class FlatViewController extends Controller
         $dimension = $request->getContent();
         $dimension = json_decode($dimension,true);
         $dimension = $dimension["dimensionpassed"];
-
-        $user = $this->getUser();
-        $customer = new Customer();
-        $customer = $user->getCustomer();  
-        $array = ["customer"=>$customer];     
+        
+        //var_dump($BDParameters);
+        if(isset($BDParameters["BDParameters"]["BDDiscrim"]) && is_array($BDParameters["BDParameters"]["BDDiscrim"]))
+        {
+            $whereArray = [];
+            foreach($BDParameters["BDParameters"]["BDDiscrim"] as $selector)
+            {
+                if($selector = "customer")
+                {
+                    $user = $this->getUser();
+                    $customer = new Customer();
+                    $customer = $user->getCustomer();
+                    $whereArray["customer"] = $customer ->getId();
+                }
+            }
+            $elementList = $API->requestQuery($API->whichBundle($BDParameters["BDName"]),$BDParameters["BDName"],$whereArray);
+        }
+        else
+        {
+            $elementList = $API->requestAll($API->whichBundle($BDParameters["BDName"]),$BDParameters["BDName"]);
+        }
         
         //let's get all the data to be passed to the front
-        $elementList = $API->requestSimpleByArray("BusinessDimension",$dimension,$array);
+        
         $elementsAsArray = $arrayFunctions->rebuildObjectsAsArraysForTreeFlatView($elementList);
         $finalarray = $arrayFunctions->rebuildANonAssociativeArray($elementsAsArray);
         
@@ -84,7 +109,7 @@ class FlatViewController extends Controller
         //\Doctrine\Common\Util\Debug::dump($elementsAsArray);
         
         //we need to transform the fieldParameters to put inside the right data for the select arrays
-        $fieldParameters = $setUpForDimension->buildSelectElements($dimension,$fieldParameters,$customer);
+        $fieldParameters = $setUpForDimension->buildSelectElements($dimension,$fieldParameters,$session->get("CustomerID"));
         
         $parametersArray = [];
         $parametersArray["dimension"]= $dimension;

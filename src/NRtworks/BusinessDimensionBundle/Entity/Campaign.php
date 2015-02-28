@@ -280,7 +280,7 @@
         return $info;
     }
     
-     public function arrayalizeForTreeFlatView()
+    public function arrayalizeForTreeFlatView()
     {
         return array(
             'id' =>  $this->id,

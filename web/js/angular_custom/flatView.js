@@ -6,17 +6,26 @@ var FlatView = angular.module('FlatView', ['ui.router','ngResource','xeditable',
 FlatView.config(function($stateProvider, $urlRouterProvider) {
 
   // For any unmatched url, redirect to /state1
-  $urlRouterProvider.otherwise("/");
+  //$urlRouterProvider.otherwise("/");
   
   
   // Now set up the states
   $stateProvider
     .state('flatView', {
-      url: "",
-      controller:"flatViewHome",
-      templateUrl:Routing.generate('_NRtworks_FlatView_elementList')                
+        views: {
+            'main': {
+                url: "",
+                controller:"flatViewHome",
+                templateUrl:Routing.generate('_NRtworks_FlatView_elementList') 
+            },
+            'discrimSelector': {
+                url: "",
+                controller:"",
+                templateUrl:Routing.generate('_NRtworks_FlatView_DiscrimSelector')                 
+            }
+        }
     });
-
+    
 });
 
 
@@ -24,14 +33,14 @@ FlatView.config(function($stateProvider, $urlRouterProvider) {
 
 FlatView.service('reUsableData',['$http','$q',function($http,$q){
 
-    var deferred = $q.defer();
+    /*var deferred = $q.defer();
      $http({method:'POST',data:{dimensionpassed:dimension},url:Routing.generate('_NRtworks_FlatView_API_getData')}).success(function(result){
          deferred.resolve(result); 
       });                
       
-     return deferred.promise;
+     return deferred.promise;*/
                   
-    
+   
 }]);
 
 FlatView.service('dataService',['$http',function($http){
@@ -42,7 +51,11 @@ FlatView.service('dataService',['$http',function($http){
         
     this.saveData = function(JSONToSend){
             return $http.post(Routing.generate('_NRtworks_FlatView_API_saveData'),{postContent:JSONToSend});
-    };    
+    }; 
+    
+    this.getBDParameters = function () {
+        return $http({method:'POST',data:{dimensionpassed:dimension},url:Routing.generate('_NRtworks_globalUtilsFunctions_getSetBDParameters')});
+    };
      
 }]);
 
@@ -51,15 +64,42 @@ FlatView.service('dataService',['$http',function($http){
 
 FlatView.controller('flatViewHome',['reUsableData','dataService','$scope','$filter','GlobalUtilsFunctionsCheckInputMethods','$q',function (reUsableData,dataService,$scope,$filter,GlobalUtilsFunctionsCheckInputMethods,$q)
 {
+   //console.log(selectorList);
+   
+    dataService.getBDParameters()
+                .success(function (result) {
+                    console.log(result);
+                    if(result["selectorList"] == 0)
+                    {
+                        //ok no need to preselect anything so simply load the data
+                        //we get the data that is shareable  between the views
+                         dataService.getData().success(function(result){
+                             $scope.dimension = result["dimension"];
+                             $scope.data = result["elementList"];
+                             $scope.fieldsParameters = result["fieldsParameters"];
+                             $scope.defaultObject = result["defaultObject"];
+                             $scope.nbFields = result["nbFields"];
+                             $scope.defaultObject[result["nbFields"]] = "NRtworks_FlatView_T0Cr3at3";
+                         });                        
+                    }
+                    else
+                    {
+                        //the user needs to select something before we load the specific data on this something
+                    }
+                })
+                .error(function (error) {
+                    $scope.status = 'Unable to load customer\'s data: ' + error.message;
+    });
+    
    //we get the data that is shareable  between the views
-    reUsableData.then(function(result){
+    /*reUsableData.then(function(result){
         $scope.dimension = result["dimension"];
         $scope.data = result["elementList"];
         $scope.fieldsParameters = result["fieldsParameters"];
         $scope.defaultObject = result["defaultObject"];
         $scope.nbFields = result["nbFields"];
         $scope.defaultObject[result["nbFields"]] = "NRtworks_FlatView_T0Cr3at3";
-    });
+    });*/
     //we get the constraints related to the fields
     GlobalUtilsFunctionsCheckInputMethods.getConstraints().then(function(result){
         $scope.propertiesConstraints = result["propertiesConstraints"];

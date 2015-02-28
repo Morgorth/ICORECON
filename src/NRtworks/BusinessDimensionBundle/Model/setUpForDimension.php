@@ -11,6 +11,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
     protected $em;
     protected $arrayFunctions;
     protected $possible;
+    protected $remotePossible;
     protected $noexist;
     protected $API;
 
@@ -66,18 +67,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
         $element = new $address();
         return $element;
     }
-    
-    //the following function returns a tree hierarchy (using DoctrineExtension)
-    // old
-    public function getChildrenHierarchy($dimension,$customer)
-    {
         
-        $address = $this->getRepositoryAddress($dimension);                  
-        $repo = $this->em->getRepository($address);
-        $arrayTree = $repo->childrenHierarchy();            
-        return $arrayTree;
-    }
-    
     //the following functions returns an array with parameters of the field to edit (name,editable,type of edit)
     public function getDefaultObject($dimension,$highestID = null)
     {        
@@ -116,8 +106,40 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
         return $result;
     }    
     
+    //the following functions gives the "mandatory" selector for a dimension
+    public function getBasicDiscriminant($dimension)
+    {
+        if(in_array($dimension,$this->possible) || in_array($dimension,$this->remotePossible))
+        {
+            $discrim = [];
+            if($dimension == "Account")
+            {
+                $discrim["toSelect"] = ["ChartOfAccount"];
+                $discrim["howToSelect"] = "UserSelection";
+            }
+            elseif($dimension == "Cycle" || $dimension == "Version" || $dimension == "Period" || $dimension == "FiscalYear" || $dimension == "Currency")
+            {
+                $discrim["toSelect"] =  "none";
+            }
+            elseif($dimension == "CurrencyValuation")
+            {
+                $discrim["toSelect"] = ["Campaign"];
+                $discrim["howToSelect"] = "UserSelection";
+            }    
+            else
+            {
+                $discrim["toSelect"]= ["customer"];
+            }
+            return $discrim;
+        }
+        else
+        {
+            return $this->noexist;
+        }
+    }
+    
     //the following function is building an array for a "select" element to be passed to the front
-    public function buildSelectElements($dimension,$fieldParameters,$customer)
+    public function buildSelectElements($dimension,$fieldParameters,$param1)
     {
         foreach($fieldParameters as &$field)
         {
@@ -141,7 +163,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                         }
                         else 
                         {
-                            $whereArray["customer"] = $customer->getId();
+                            $whereArray["customer"] = $param1;
                         }
                         
                         
@@ -199,7 +221,7 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                             }
                             elseif($field["fieldName"] == "status")
                             {
-                                $return = array(0=>["value"=>"not started","text"=>"not started"],1=>["value"=>"in progress","text"=>"in progress"],2=>["value"=>"closed","text"=>"closed"]);
+                                $field["options"] = array(0=>["value"=>"not started","text"=>"not started"],1=>["value"=>"in progress","text"=>"in progress"],2=>["value"=>"closed","text"=>"closed"]);
                             }
                             else
                             {
@@ -370,8 +392,8 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $newObject->setStatus($element[3]);
                 $newObject->setFiscalYear($element[4]);
                 $newObject->setVersion($element[5]);
-                $newObject->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[6]));
-                $newObject->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[7]));
+                $newObject->setCycle($this->API->requestById($this->API->whichBundle("Cycle"),"Cycle",$element[6]));
+                $newObject->setPeriod($this->API->requestById($this->API->whichBundle("Period"),"Period",$element[7]));
                 
                 
                 return $newObject;
@@ -410,8 +432,8 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $object->setStatus($element[3]);
                 $object->setFiscalYear($element[4]);
                 $object->setVersion($element[5]);
-                $object->setCycle($this->API->requestById($this->API->whichBundle($remoteDimension),"Cycle",$element[6]));
-                $object->setPeriod($this->API->requestById($this->API->whichBundle($remoteDimension),"Period",$element[7]));
+                $object->setCycle($this->API->requestById($this->API->whichBundle("Cycle"),"Cycle",$element[6]));
+                $object->setPeriod($this->API->requestById($this->API->whichBundle("Period"),"Period",$element[7]));
                 return $object;
             }
             if($dimension == "BusinessUnit")
