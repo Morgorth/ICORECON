@@ -77,10 +77,10 @@ class FlatViewController extends Controller
         $dimension = $dimension["dimensionpassed"];
         
         //var_dump($BDParameters);
-        if(isset($BDParameters["BDParameters"]["BDDiscrim"]) && is_array($BDParameters["BDParameters"]["BDDiscrim"]))
+        if(isset($BDParameters["BDDiscrim"]) && is_array($BDParameters["BDDiscrim"]))
         {
             $whereArray = [];
-            foreach($BDParameters["BDParameters"]["BDDiscrim"] as $selector)
+            foreach($BDParameters["BDDiscrim"] as $selector)
             {
                 if($selector = "customer")
                 {

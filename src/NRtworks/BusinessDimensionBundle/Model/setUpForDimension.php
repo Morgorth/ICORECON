@@ -117,15 +117,15 @@ class setUpForDimension extends \Symfony\Component\DependencyInjection\Container
                 $discrim["toSelect"] = ["ChartOfAccount"];
                 $discrim["howToSelect"] = "UserSelection";
             }
-            elseif($dimension == "Cycle" || $dimension == "Version" || $dimension == "Period" || $dimension == "FiscalYear" || $dimension == "Currency")
-            {
-                $discrim["toSelect"] =  "none";
-            }
             elseif($dimension == "CurrencyValuation")
             {
                 $discrim["toSelect"] = ["Campaign"];
                 $discrim["howToSelect"] = "UserSelection";
-            }    
+            }  
+            elseif($dimension == "Cycle" || $dimension == "Version" || $dimension == "Period" || $dimension == "FiscalYear" || $dimension == "Currency")
+            {
+                $discrim["toSelect"] =  "none";
+            }            
             else
             {
                 $discrim["toSelect"]= ["customer"];

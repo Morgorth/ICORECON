@@ -1,7 +1,11 @@
 
-<div class="NRtworks_discrimSelector">
-    
-    select me
-    <input type="select">select me</input>
-    
+<div class="NRtworks_discrimSelectorContainer">
+    {%verbatim %}
+    Select the {{ discrimName }} to edit the {{ dimension }} for:
+    <select class="NRtworks_discrimSelect" data-style="btn-inverse" data-live-search="true">
+        
+        <option ng-repeat="element in discrimSelectorValues" value="{{element.value}}">{{element.text}}</option>    
+            
+    </select>
+    {%endverbatim %}
 </div>

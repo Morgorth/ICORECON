@@ -1,31 +1,48 @@
 var FlatView = angular.module('FlatView', ['ui.router','ngResource','xeditable','GlobalUtilsFunctionsCheckInput']);
 
 
+
 // --------------------------------------------------- ROUTING  ------------------------------------------------
 
 FlatView.config(function($stateProvider, $urlRouterProvider) {
 
-  // For any unmatched url, redirect to /state1
-  //$urlRouterProvider.otherwise("/");
-  
-  
-  // Now set up the states
-  $stateProvider
-    .state('flatView', {
-        views: {
-            'main': {
-                url: "",
-                controller:"flatViewHome",
-                templateUrl:Routing.generate('_NRtworks_FlatView_elementList') 
-            },
-            'discrimSelector': {
-                url: "",
-                controller:"",
-                templateUrl:Routing.generate('_NRtworks_FlatView_DiscrimSelector')                 
-            }
-        }
-    });
-    
+    $urlRouterProvider.otherwise("");
+   
+    $stateProvider
+      .state('flatView', {
+          url:"",
+          
+          views: {
+              'main': {
+                  controller:"flatViewElementList",
+                  templateUrl:Routing.generate('_NRtworks_FlatView_elementList') 
+              },
+              'discrimSelector': {
+                  controller:"flatViewElementList",
+                  templateProvider:['BDParameters','$http','$rootScope',function(BDParameters,$http,$rootScope){
+                          
+                    return BDParameters.then(function (result) {
+                        //console.log(result);
+                        if(result["selectorList"] === 0)
+                        {
+                            return "";
+                        }
+                        else
+                        {                            
+                            return $http.get(Routing.generate('_NRtworks_FlatView_DiscrimSelector')).then(function(result)
+                            {
+                                //console.log(result.data);                                
+                                return result.data;
+                            });                           
+                        }
+                    });
+                    
+                    //return Routing.generate('_NRtworks_FlatView_DiscrimSelector');
+                   
+                  }]                                                                     
+              }
+          }
+      });    
 });
 
 
@@ -38,9 +55,17 @@ FlatView.service('reUsableData',['$http','$q',function($http,$q){
          deferred.resolve(result); 
       });                
       
-     return deferred.promise;*/
-                  
-   
+     return deferred.promise;*/                     
+}]);
+
+FlatView.service('BDParameters',['$http','$q',function($http,$q){
+
+    var deferred = $q.defer();
+     $http({method:'POST',data:{dimensionpassed:dimension},url:Routing.generate('_NRtworks_globalUtilsFunctions_getSetBDParameters')}).success(function(result){
+         deferred.resolve(result); 
+      });                
+      
+     return deferred.promise;                     
 }]);
 
 FlatView.service('dataService',['$http',function($http){
@@ -60,16 +85,28 @@ FlatView.service('dataService',['$http',function($http){
 }]);
 
 
-// ----------------------------------------------------  main controler -------------------------------------------
+// ----------------------------------------------------  controllers -------------------------------------------
 
-FlatView.controller('flatViewHome',['reUsableData','dataService','$scope','$filter','GlobalUtilsFunctionsCheckInputMethods','$q',function (reUsableData,dataService,$scope,$filter,GlobalUtilsFunctionsCheckInputMethods,$q)
+FlatView.controller('flatViewDiscrimSelector',['BDParameters','dataService','$scope','$filter','$q',function (BDParameters,dataService,$scope,$filter,$q)
 {
-   //console.log(selectorList);
-   
-    dataService.getBDParameters()
-                .success(function (result) {
-                    console.log(result);
-                    if(result["selectorList"] == 0)
+    BDParameters.then(function (result) {
+        
+    });
+        
+}]);
+
+FlatView.controller('flatViewElementList',['BDParameters','dataService','$scope','$filter','GlobalUtilsFunctionsCheckInputMethods','$q','$rootScope',function (BDParameters,dataService,$scope,$filter,GlobalUtilsFunctionsCheckInputMethods,$q,$rootScope)
+{
+    
+    $rootScope.$broadcast("myEvent");
+    $scope.$on("myEvent",function () {console.log('my event occurred');});    
+    BDParameters.then(function (result) {
+                    //console.log(result);
+                    $rootScope.$broadcast("DiscrimSelectorLoaded");
+                    $scope.discrimSelectorValues = result["selectorList"];
+                    $scope.discrimName = result["BDParameters"]["BDDiscrim"][0];
+                    $scope.dimension = result["BDParameters"]["BDName"];
+                    if(result["selectorList"] === 0)
                     {
                         //ok no need to preselect anything so simply load the data
                         //we get the data that is shareable  between the views
@@ -82,14 +119,7 @@ FlatView.controller('flatViewHome',['reUsableData','dataService','$scope','$filt
                              $scope.defaultObject[result["nbFields"]] = "NRtworks_FlatView_T0Cr3at3";
                          });                        
                     }
-                    else
-                    {
-                        //the user needs to select something before we load the specific data on this something
-                    }
-                })
-                .error(function (error) {
-                    $scope.status = 'Unable to load customer\'s data: ' + error.message;
-    });
+                });
     
    //we get the data that is shareable  between the views
     /*reUsableData.then(function(result){
@@ -329,6 +359,28 @@ FlatView.directive('selectWhenEditing',function(){
                 }
             }
         });
+        
+    };
+    return{
+        restrict: 'AEC',
+        link:linkFunction
+    };}
+);
+
+FlatView.directive('NRtworks_discrimSelect',function($rootScope){
+    var linkFunction = function(scope, element, attributes)
+    {       
+        $scope.$on("DiscrimSelectorLoaded", function(){
+                    transformDiscrimSelect(element);
+        });
+        
+        function transformDiscrimSelect(element)
+        {
+            console.log("occured");
+            element.on('change',function(event){
+                //do stuff
+            });
+        };
         
     };
     return{

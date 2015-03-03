@@ -194,14 +194,15 @@ class GlobalUtilsFunctionsController extends Controller
             $setUpForDimension = $this->get('BusinessDimension.setUpForDimension');
             $API = $this->get('GlobalUtilsFunctions_APIGetData');
             $serializer = $this->get('jms_serializer'); 
+            $arrayFunctions = $this->get('arrayFunctions');
 
             //let's get infos on how to treat this dimension
             $dimensionDiscrim = $setUpForDimension->getBasicDiscriminant($dimension);
 
             $parametersArray = [];
-            $parametersArray = ["BDName"=>$dimension];
+            $parametersArray["BDName"] = $dimension;
 
-            $selectorList = 0;
+            $selectHTML = 0;
             //echo $dimensionDiscrim["toSelect"][0];
             if(is_array($dimensionDiscrim) && $dimensionDiscrim["toSelect"] != "none")
             {
@@ -211,21 +212,34 @@ class GlobalUtilsFunctionsController extends Controller
                     $whereArray["customer"] = $session->get("CustomerID");
                     $selectorList = $API->requestQuery($API->whichBundle($dimensionDiscrim["toSelect"][0]),$dimensionDiscrim["toSelect"][0],$whereArray);
                     //$selectorList = $serializer->serialize($selectorList, 'json');
+                    
+                    //now let's build the data so the fornt can build select elements
+                    $selectorList = $arrayFunctions->rebuildObjectsAsArrays($selectorList);
+                    //ok we got all we need so let's build the array used to build the HTML select element
+                    $selectHTML = [];
+                    foreach($selectorList as $element)
+                    {
+                        //var_dump($element);
+                        $subarray = array("value"=>$element["id"],"text"=>$element["name"]);
+                        array_push($selectHTML,$subarray);
+                    }
+                    $parametersArray["BDDiscrim"] = $dimensionDiscrim["toSelect"];
                 }
                 else
                 {
-                    //this is the easy case, the selector is defined in the model
-                    $parametersArray["BDParameters"]=["BDDiscrim"=>$dimensionDiscrim["toSelect"]];
+                    //this is the easy case, the selector is defined in the model,le'ts build the whereArray
+                    $parametersArray["BDDiscrim"] =$dimensionDiscrim["toSelect"];
+                    
                 }
             }
             else
             {
-                $parametersArray["BDParameters"]=["BDDiscrim"=>"none"];
+                $parametersArray["BDDiscrim"] = "none";
             }
-
+            //var_dump($parametersArray);
             $session->set("BDParameters", $parametersArray);
             //$parametersArray = json_encode($parametersArray);
-            $res = json_encode(["BDParameters"=>$parametersArray,"selectorList"=>$selectorList]);                     
+            $res = json_encode(["BDParameters"=>$parametersArray,"selectorList"=>$selectHTML]);                     
             return new Response($res); 
         }
     }
